@@ -5,16 +5,39 @@ VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChapterListMB", "ChapterListMB\ChapterListMB.csproj", "{9F0F920A-74AD-4FFF-8754-7CDAA41FFCD0}"
 EndProject
+Project("{911E67C6-3D85-4FCE-B560-20A9C3E3FF48}") = "MusicBee", "C:\Program Files (x86)\MusicBee\MusicBee.exe", "{65F3AAA8-7BC3-4F7C-970A-6B717714424F}"
+	ProjectSection(DebuggerProjectSystem) = preProject
+		PortSupplier = 00000000-0000-0000-0000-000000000000
+		Executable = C:\Program Files (x86)\MusicBee\MusicBee.exe
+		RemoteMachine = SKYLAKEONE
+		StartingDirectory = C:\Program Files (x86)\MusicBee
+		Environment = Default
+		LaunchingEngine = 00000000-0000-0000-0000-000000000000
+		UseLegacyDebugEngines = No
+		LaunchSQLEngine = No
+		AttachLaunchAction = No
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{9F0F920A-74AD-4FFF-8754-7CDAA41FFCD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9F0F920A-74AD-4FFF-8754-7CDAA41FFCD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F0F920A-74AD-4FFF-8754-7CDAA41FFCD0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9F0F920A-74AD-4FFF-8754-7CDAA41FFCD0}.Debug|x86.Build.0 = Debug|Any CPU
 		{9F0F920A-74AD-4FFF-8754-7CDAA41FFCD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9F0F920A-74AD-4FFF-8754-7CDAA41FFCD0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F0F920A-74AD-4FFF-8754-7CDAA41FFCD0}.Release|x86.ActiveCfg = Release|Any CPU
+		{9F0F920A-74AD-4FFF-8754-7CDAA41FFCD0}.Release|x86.Build.0 = Release|Any CPU
+		{65F3AAA8-7BC3-4F7C-970A-6B717714424F}.Debug|Any CPU.ActiveCfg = Release|x86
+		{65F3AAA8-7BC3-4F7C-970A-6B717714424F}.Debug|x86.ActiveCfg = Release|x86
+		{65F3AAA8-7BC3-4F7C-970A-6B717714424F}.Release|Any CPU.ActiveCfg = Release|x86
+		{65F3AAA8-7BC3-4F7C-970A-6B717714424F}.Release|x86.ActiveCfg = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
