@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using ChapterListMB;
 
 namespace MusicBeePlugin
 {
@@ -26,11 +27,7 @@ namespace MusicBeePlugin
             about.Revision = 1;
             about.MinInterfaceVersion = MinInterfaceVersion;
             about.MinApiRevision = MinApiRevision;
-            about.ReceiveNotifications = (ReceiveNotificationFlags.PlayerEvents | ReceiveNotificationFlags.TagEvents);
-
-            var sampleRate = int.Parse(mbApiInterface.NowPlaying_GetFileProperty(FilePropertyType.SampleRate));
-            var sr = sampleRate*sampleRate;
-
+            about.ReceiveNotifications = (ReceiveNotificationFlags.PlayerEvents);
             about.ConfigurationPanelHeight = 0;   // height in pixels that musicbee should reserve in a panel for config settings. When set, a handle to an empty panel will be passed to the Configure function
             return about;
 
@@ -94,7 +91,9 @@ namespace MusicBeePlugin
                     }
                     break;
                 case NotificationType.TrackChanged:
-                    string artist = mbApiInterface.NowPlaying_GetFileTag(MetaDataType.Artist);
+                    var trackFilepath = new Uri(mbApiInterface.NowPlaying_GetFileProperty(FilePropertyType.Url), UriKind.Absolute);
+                    var trackDuration = new TimeSpan(0,0,0,0,mbApiInterface.NowPlaying_GetDuration());
+                    var track = new Track(trackFilepath, trackDuration);
                     // ...
                     break;
             }

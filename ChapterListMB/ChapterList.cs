@@ -11,6 +11,10 @@ namespace ChapterListMB
         public List<Chapter> Chapters { get; private set; }
         public int NumChapters { get { return Chapters.Count; } }
 
+        public ChapterList()
+        {
+            Chapters = new List<Chapter>();
+        }
         public void CreateNewChapter(string name, int position)
         {
             Chapters.Add(new Chapter(name, position));

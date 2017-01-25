@@ -8,12 +8,33 @@ namespace ChapterListMB
 {
     public class Chapter
     {
-        public string Name { get; private set; }
-        public int Position { get; private set; }
-
-        public Chapter(string name, int position)
+        /// <summary>
+        /// Title of this chapter.
+        /// </summary>
+        public string Title { get; private set; }
+        /// <summary>
+        /// Timecode of this chapter's position, in HH:MM:SS
+        /// </summary>
+        public string TimeCode
         {
-            Name = name;
+            get
+            {
+                var time = new TimeSpan(0, 0, 0, 0, Position);
+                return $"{time.Hours}:{time.Minutes}:{time.Seconds}";
+            }
+        }
+        /// <summary>
+        /// Position of the chapter, in milliseconds.
+        /// </summary>
+        public int Position { get; private set; }
+        /// <summary>
+        /// Creates a new Chapter object.
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="position"></param>
+        public Chapter(string title, int position)
+        {
+            Title = title;
             Position = position;
         }
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using MusicBeePlugin;
 
 namespace ChapterListMB
@@ -10,32 +11,46 @@ namespace ChapterListMB
 
     class Track
     {
-        private Plugin.MusicBeeApiInterface _mbApi;
-        public ChapterList ChapterList { get; }
-        public string FileUrl { get; set; }
-        public int Duration { get; set; }
 
-        public Track(Plugin.MusicBeeApiInterface mbApiInterface)
+        public ChapterList ChapterList { get; private set; }
+        public Uri FilePathUri { get; set; }
+        public TimeSpan Duration { get; set; }
+
+        public Track(Uri trackFilepath, TimeSpan trackDuration)
         {
-            _mbApi = mbApiInterface;
-            GetTrackInformation();
+            ChapterList = new ChapterList();
+            FilePathUri = trackFilepath;
+            Duration = trackDuration;
+            CreateChapterList(FilePathUri);
         }
 
-        private void GetTrackInformation()
+        private void CreateChapterList(Uri xmlPath)
         {
-            FileUrl = _mbApi.NowPlaying_GetFileUrl();
-            Duration = _mbApi.NowPlaying_GetDuration();
+            try
+            {
+                var chaptersListDoc = XDocument.Load(xmlPath + ".xml");
+                var importedChaptersList = from n in chaptersListDoc.Descendants("Chapter")
+                                           select n;
+                foreach (var xElement in importedChaptersList)
+                {
+                    ChapterList.CreateNewChapter(xElement.Attribute("name").Value, int.Parse(xElement.Attribute("pos").Value));
+                }
+            }
+            catch (Exception ex)
+            {
+                
+            }
         }
 
-        public int GetTrackPosition()
+        public void CreateNewChapter(string chapterName, int chapterPosition)
         {
-            return _mbApi.Player_GetPosition();
+            ChapterList.CreateNewChapter(chapterName, chapterPosition);
         }
 
-        public void SetTrackPosition(int newPosition)
+        public void RemoveChapter(Chapter chapterToRemove)
         {
-            if (newPosition < Duration)
-                _mbApi.Player_SetPosition(newPosition);
+            throw new NotImplementedException();
         }
+
     }
 }
