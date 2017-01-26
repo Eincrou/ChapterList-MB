@@ -17,15 +17,24 @@ namespace ChapterListMB
         }
         public void CreateNewChapter(string name, int position)
         {
-            Chapters.Add(new Chapter(name, position));
+            Chapters.Add(new Chapter(position, name));
+            ReorderChapters();
+
         }
 
         public void RemoveChapter(Chapter chapterToRemove)
         {
-            if (Chapters.Contains(chapterToRemove))
-            {
-                Chapters.Remove(chapterToRemove);
-            }
+            if (!Chapters.Contains(chapterToRemove)) return;
+            Chapters.Remove(chapterToRemove);
+            ReorderChapters();
+        }
+
+        private void ReorderChapters()
+        {
+            var reorderedChapters = from chapter in Chapters
+                                    orderby chapter.Position ascending
+                                    select chapter;
+            Chapters = reorderedChapters.ToList();
         }
     }
 }

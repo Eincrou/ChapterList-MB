@@ -3,6 +3,8 @@ using System.Runtime.InteropServices;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using System.Drawing.Text;
+using System.Linq;
 using ChapterListMB;
 
 namespace MusicBeePlugin
@@ -11,6 +13,7 @@ namespace MusicBeePlugin
     {
         private MusicBeeApiInterface mbApiInterface;
         private PluginInfo about = new PluginInfo();
+        private MainForm _mainForm;
 
         public PluginInfo Initialise(IntPtr apiInterfacePtr)
         {
@@ -29,9 +32,9 @@ namespace MusicBeePlugin
             about.MinApiRevision = MinApiRevision;
             about.ReceiveNotifications = (ReceiveNotificationFlags.PlayerEvents);
             about.ConfigurationPanelHeight = 0;   // height in pixels that musicbee should reserve in a panel for config settings. When set, a handle to an empty panel will be passed to the Configure function
-            return about;
 
-            
+            CreateMenuItem();
+            return about;
         }
 
         public bool Configure(IntPtr panelHandle)
@@ -82,6 +85,9 @@ namespace MusicBeePlugin
             {
                 case NotificationType.PluginStartup:
                     // perform startup initialisation
+                    //if (_mainForm != null) return;
+                    //_mainForm = new MainForm();
+                    //_mainForm.Show();
                     switch (mbApiInterface.Player_GetPlayState())
                     {
                         case PlayState.Playing:
@@ -91,12 +97,21 @@ namespace MusicBeePlugin
                     }
                     break;
                 case NotificationType.TrackChanged:
-                    var trackFilepath = new Uri(mbApiInterface.NowPlaying_GetFileProperty(FilePropertyType.Url), UriKind.Absolute);
-                    var trackDuration = new TimeSpan(0,0,0,0,mbApiInterface.NowPlaying_GetDuration());
-                    var track = new Track(trackFilepath, trackDuration);
-                    // ...
+                    var track = GetTrack();
+                    _mainForm.Invoke(_mainForm.UpdateFormDelegate, track.ChapterList.Chapters);
+                    //_mainForm.UpdateForm(track.ChapterList.Chapters.ToList());
                     break;
             }
+        }
+
+        private Track GetTrack()
+        {
+            var trackFilepath = new Uri(mbApiInterface.NowPlaying_GetFileProperty(FilePropertyType.Url), UriKind.Absolute);
+            var trackDuration = new TimeSpan(0, 0, 0, 0, mbApiInterface.NowPlaying_GetDuration());
+            var trackArtist = mbApiInterface.NowPlaying_GetFileTag(MetaDataType.Artist);
+            var trackTitle = mbApiInterface.NowPlaying_GetFileTag(MetaDataType.TrackTitle);
+            var track = new Track(trackFilepath, trackDuration, trackArtist, trackTitle);
+            return track;
         }
 
         // return an array of lyric or artwork provider names this plugin supports
@@ -122,5 +137,28 @@ namespace MusicBeePlugin
             //Return Convert.ToBase64String(artworkBinaryData)
             return null;
         }
-   }
+
+        private void CreateMenuItem()
+        {
+            mbApiInterface.MB_AddMenuItem("mnuTools/" + @"Chapter List | MB", "Hotkey for CLMB", OnMenuClicked);
+        }
+
+        private void OnMenuClicked(object sender, EventArgs args)
+        {
+            if (_mainForm != null) return;
+            _mainForm = new MainForm();
+            _mainForm.Show();
+            _mainForm.SelectedItemDoubleClickedRouted += MainFormOnSelectedItemDoubleClickedRouted;
+            if (mbApiInterface.Player_GetPlayState() != PlayState.Undefined)
+            {
+                var track = GetTrack();
+                _mainForm.Invoke(_mainForm.UpdateFormDelegate, track.ChapterList.Chapters);
+            }
+        }
+
+        private void MainFormOnSelectedItemDoubleClickedRouted(object sender, Chapter chapter)
+        {
+            mbApiInterface.Player_SetPosition(chapter.Position);
+        }
+    }
 }

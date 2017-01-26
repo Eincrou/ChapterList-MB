@@ -8,32 +8,36 @@ using MusicBeePlugin;
 
 namespace ChapterListMB
 {
-
-    class Track
+    public class Track
     {
 
         public ChapterList ChapterList { get; private set; }
         public Uri FilePathUri { get; set; }
         public TimeSpan Duration { get; set; }
-
-        public Track(Uri trackFilepath, TimeSpan trackDuration)
+        private readonly Uri _xmlPath;
+        public Track(Uri trackFilepath, TimeSpan trackDuration, string trackArtist, string trackTitle)
         {
             ChapterList = new ChapterList();
             FilePathUri = trackFilepath;
             Duration = trackDuration;
-            CreateChapterList(FilePathUri);
+            _xmlPath = new Uri($"{trackFilepath}.xml", UriKind.Absolute);
+            CreateChapterList();
         }
 
-        private void CreateChapterList(Uri xmlPath)
+        private void CreateChapterList()
         {
             try
             {
-                var chaptersListDoc = XDocument.Load(xmlPath + ".xml");
-                var importedChaptersList = from n in chaptersListDoc.Descendants("Chapter")
-                                           select n;
-                foreach (var xElement in importedChaptersList)
+                
+                if (!System.IO.File.Exists(_xmlPath.LocalPath)) { return; }
+                var chaptersListDoc = XDocument.Load(_xmlPath.LocalPath);
+                if (chaptersListDoc.Root.Attribute("version").Value == "1.0")   // 1.0 is original chapterlist XML format
                 {
-                    ChapterList.CreateNewChapter(xElement.Attribute("name").Value, int.Parse(xElement.Attribute("pos").Value));
+                    foreach (var xElement in chaptersListDoc.Descendants("Chapter"))
+                    {
+                        ChapterList.CreateNewChapter(xElement.Attribute("name").Value,
+                            int.Parse(xElement.Attribute("pos").Value));
+                    }
                 }
             }
             catch (Exception ex)
@@ -42,9 +46,28 @@ namespace ChapterListMB
             }
         }
 
+        private void SaveChapterList()
+        {
+            var xmlDoc = new XDocument(
+                new XDeclaration("1.0", "UTF-8", "yes"),
+                new XElement("Chapterlist", new XAttribute("version", "1.0")
+                )
+            );
+            foreach (var chapter in ChapterList.Chapters)
+            {
+                var newElement = new XElement("Chapter",
+                    new XAttribute("pos", chapter.Position),
+                    new XAttribute("name", chapter.Title)
+                );
+                xmlDoc.Root.Add(newElement);
+            }
+            xmlDoc.Save(_xmlPath.LocalPath);
+        }
+
         public void CreateNewChapter(string chapterName, int chapterPosition)
         {
             ChapterList.CreateNewChapter(chapterName, chapterPosition);
+            SaveChapterList();
         }
 
         public void RemoveChapter(Chapter chapterToRemove)
