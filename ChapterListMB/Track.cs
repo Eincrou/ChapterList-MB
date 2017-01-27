@@ -64,15 +64,16 @@ namespace ChapterListMB
             xmlDoc.Save(_xmlPath.LocalPath);
         }
 
-        public void CreateNewChapter(string chapterName, int chapterPosition)
+        public void CreateNewChapter(string chapterTitle, int chapterPosition)
         {
-            ChapterList.CreateNewChapter(chapterName, chapterPosition);
+            ChapterList.CreateNewChapter(chapterTitle, chapterPosition);
             SaveChapterList();
         }
 
         public void RemoveChapter(Chapter chapterToRemove)
         {
-            throw new NotImplementedException();
+            ChapterList.RemoveChapter(chapterToRemove);
+            SaveChapterList();
         }
 
     }

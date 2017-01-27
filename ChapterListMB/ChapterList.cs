@@ -18,18 +18,17 @@ namespace ChapterListMB
         public void CreateNewChapter(string name, int position)
         {
             Chapters.Add(new Chapter(position, name));
-            ReorderChapters();
-
+            SortChapters();
         }
 
         public void RemoveChapter(Chapter chapterToRemove)
         {
             if (!Chapters.Contains(chapterToRemove)) return;
             Chapters.Remove(chapterToRemove);
-            ReorderChapters();
+            SortChapters();
         }
 
-        private void ReorderChapters()
+        private void SortChapters()
         {
             var reorderedChapters = from chapter in Chapters
                                     orderby chapter.Position ascending

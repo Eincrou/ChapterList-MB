@@ -14,6 +14,7 @@ namespace MusicBeePlugin
         private MusicBeeApiInterface mbApiInterface;
         private PluginInfo about = new PluginInfo();
         private MainForm _mainForm;
+        private Track _track;
 
         public PluginInfo Initialise(IntPtr apiInterfacePtr)
         {
@@ -97,8 +98,9 @@ namespace MusicBeePlugin
                     }
                     break;
                 case NotificationType.TrackChanged:
-                    var track = GetTrack();
-                    _mainForm.Invoke(_mainForm.UpdateFormDelegate, track.ChapterList.Chapters);
+                    if (_mainForm == null) return;
+                    _track = GetTrack();
+                    _mainForm.Invoke(_mainForm.UpdateFormDelegate, _track.ChapterList.Chapters);
                     //_mainForm.UpdateForm(track.ChapterList.Chapters.ToList());
                     break;
             }
@@ -145,20 +147,31 @@ namespace MusicBeePlugin
 
         private void OnMenuClicked(object sender, EventArgs args)
         {
-            if (_mainForm != null) return;
             _mainForm = new MainForm();
             _mainForm.Show();
             _mainForm.SelectedItemDoubleClickedRouted += MainFormOnSelectedItemDoubleClickedRouted;
+            _mainForm.AddChapterButtonClickedRouted += _mainForm_AddChapterButtonClickedRouted;
+            _mainForm.RemoveChapterButtonClickedRouted += MainFormOnRemoveChapterButtonClickedRouted;
             if (mbApiInterface.Player_GetPlayState() != PlayState.Undefined)
             {
-                var track = GetTrack();
-                _mainForm.Invoke(_mainForm.UpdateFormDelegate, track.ChapterList.Chapters);
+                _track = GetTrack();
+                _mainForm.Invoke(_mainForm.UpdateFormDelegate, _track.ChapterList.Chapters);
             }
         }
-
         private void MainFormOnSelectedItemDoubleClickedRouted(object sender, Chapter chapter)
         {
             mbApiInterface.Player_SetPosition(chapter.Position);
+        }
+        private void _mainForm_AddChapterButtonClickedRouted(object sender, string newChapterTitle)
+        {
+            var currentPosition = mbApiInterface.Player_GetPosition();
+            _track.CreateNewChapter(newChapterTitle, currentPosition);
+            _mainForm.Invoke(_mainForm.UpdateFormDelegate, _track.ChapterList.Chapters);
+        }
+        private void MainFormOnRemoveChapterButtonClickedRouted(object sender, Chapter e)
+        {
+            _track.RemoveChapter(e);
+            _mainForm.Invoke(_mainForm.UpdateFormDelegate, _track.ChapterList.Chapters);
         }
     }
 }
