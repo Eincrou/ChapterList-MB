@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Drawing.Text;
 using System.Linq;
 using ChapterListMB;
+using Timer = System.Timers.Timer;
 
 namespace MusicBeePlugin
 {
@@ -86,13 +87,14 @@ namespace MusicBeePlugin
             {
                 case NotificationType.PluginStartup:
                     // perform startup initialisation
-                    //if (_mainForm != null) return;
-                    //_mainForm = new MainForm();
-                    //_mainForm.Show();
+                    if (_mainForm != null) return;
+                   // _mainForm = new MainForm();
+                   // _mainForm.Show();
                     switch (mbApiInterface.Player_GetPlayState())
                     {
                         case PlayState.Playing:
                         case PlayState.Paused:
+                        case PlayState.Loading:
                             // ...
                             break;
                     }
@@ -100,19 +102,23 @@ namespace MusicBeePlugin
                 case NotificationType.TrackChanged:
                     if (_mainForm == null) return;
                     _track = GetTrack();
-                    _mainForm.Invoke(_mainForm.UpdateFormDelegate, _track.ChapterList.Chapters);
-                    //_mainForm.UpdateForm(track.ChapterList.Chapters.ToList());
+                    _mainForm.Invoke(_mainForm.UpdateTrackDelegate, _track);
                     break;
             }
         }
 
         private Track GetTrack()
         {
-            var trackFilepath = new Uri(mbApiInterface.NowPlaying_GetFileProperty(FilePropertyType.Url), UriKind.Absolute);
-            var trackDuration = new TimeSpan(0, 0, 0, 0, mbApiInterface.NowPlaying_GetDuration());
-            var trackArtist = mbApiInterface.NowPlaying_GetFileTag(MetaDataType.Artist);
-            var trackTitle = mbApiInterface.NowPlaying_GetFileTag(MetaDataType.TrackTitle);
-            var track = new Track(trackFilepath, trackDuration, trackArtist, trackTitle);
+            var trackInfo = new NowPlayingTrackInfo(
+                mbApiInterface.NowPlaying_GetFileTag(MetaDataType.TrackTitle),
+                mbApiInterface.NowPlaying_GetFileTag(MetaDataType.Artist),
+                mbApiInterface.NowPlaying_GetFileTag(MetaDataType.Album),
+                new TimeSpan(0, 0, 0, 0,
+                    mbApiInterface.NowPlaying_GetDuration()),
+                new Uri(mbApiInterface.NowPlaying_GetFileProperty(
+                    FilePropertyType.Url), UriKind.Absolute)
+            );
+            var track = new Track(trackInfo);
             return track;
         }
 
@@ -149,29 +155,45 @@ namespace MusicBeePlugin
         {
             _mainForm = new MainForm();
             _mainForm.Show();
-            _mainForm.SelectedItemDoubleClickedRouted += MainFormOnSelectedItemDoubleClickedRouted;
-            _mainForm.AddChapterButtonClickedRouted += _mainForm_AddChapterButtonClickedRouted;
-            _mainForm.RemoveChapterButtonClickedRouted += MainFormOnRemoveChapterButtonClickedRouted;
+            SubscribeToEvents();
             if (mbApiInterface.Player_GetPlayState() != PlayState.Undefined)
             {
                 _track = GetTrack();
-                _mainForm.Invoke(_mainForm.UpdateFormDelegate, _track.ChapterList.Chapters);
+                _mainForm.Invoke(_mainForm.UpdateTrackDelegate, _track);
             }
         }
+
+        private void SubscribeToEvents()
+        {
+            _mainForm.SelectedItemDoubleClickedRouted += MainFormOnSelectedItemDoubleClickedRouted;
+            _mainForm.AddChapterButtonClickedRouted += MainFormOnAddChapterButtonClickedRouted;
+            _mainForm.RemoveChapterButtonClickedRouted += MainFormOnRemoveChapterButtonClickedRouted;
+            _mainForm.ChangeChapterRequested += MainFormOnChangeChapterRequested;
+        }
+
+
         private void MainFormOnSelectedItemDoubleClickedRouted(object sender, Chapter chapter)
         {
             mbApiInterface.Player_SetPosition(chapter.Position);
         }
-        private void _mainForm_AddChapterButtonClickedRouted(object sender, string newChapterTitle)
+        private void MainFormOnAddChapterButtonClickedRouted(object sender, string newChapterTitle)
         {
             var currentPosition = mbApiInterface.Player_GetPosition();
-            _track.CreateNewChapter(newChapterTitle, currentPosition);
-            _mainForm.Invoke(_mainForm.UpdateFormDelegate, _track.ChapterList.Chapters);
+            if (newChapterTitle == string.Empty)
+                _track.ChapterList.CreateNewChapter(currentPosition);
+            else
+            _track.ChapterList.CreateNewChapter(newChapterTitle, currentPosition);
+            _mainForm.Invoke(_mainForm.UpdateTrackDelegate, _track);
         }
         private void MainFormOnRemoveChapterButtonClickedRouted(object sender, Chapter e)
         {
-            _track.RemoveChapter(e);
-            _mainForm.Invoke(_mainForm.UpdateFormDelegate, _track.ChapterList.Chapters);
+            _track.ChapterList.RemoveChapter(e);
+            _mainForm.Invoke(_mainForm.UpdateTrackDelegate, _track);
+        }
+        private void MainFormOnChangeChapterRequested(object sender, ChapterChangeEventArgs e)
+        {
+            _track.ChapterList.ChangeChapter(e.ChapterToChange, new Chapter(e.Position, e.Title));
+           _mainForm.Invoke(_mainForm.UpdateTrackDelegate, _track);
         }
     }
 }

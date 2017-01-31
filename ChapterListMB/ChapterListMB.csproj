@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Chapter.cs" />
+    <Compile Include="ChapterChangeEventArgs.cs" />
     <Compile Include="ChapterList.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -54,6 +55,7 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="MusicBeeInterface.cs" />
+    <Compile Include="NowPlayingTrackInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ChapterListMB.cs" />
     <Compile Include="Track.cs" />

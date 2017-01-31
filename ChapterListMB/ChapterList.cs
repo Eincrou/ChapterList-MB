@@ -19,13 +19,20 @@ namespace ChapterListMB
         {
             Chapters.Add(new Chapter(position, name));
             SortChapters();
+            OnChapterListUpdated();
         }
-
+        public void CreateNewChapter(int position)
+        {
+            Chapters.Add(new Chapter(position));
+            SortChapters();
+            OnChapterListUpdated();
+        }
         public void RemoveChapter(Chapter chapterToRemove)
         {
             if (!Chapters.Contains(chapterToRemove)) return;
             Chapters.Remove(chapterToRemove);
             SortChapters();
+            OnChapterListUpdated();
         }
 
         private void SortChapters()
@@ -34,6 +41,40 @@ namespace ChapterListMB
                                     orderby chapter.Position ascending
                                     select chapter;
             Chapters = reorderedChapters.ToList();
+            OnChapterListUpdated();
+        }
+
+        public void ChangeChapter(Chapter chapterToChange, string newTitle)
+        {
+            Chapters.Find(e=>e == chapterToChange).Title = newTitle;
+            OnChapterListUpdated();
+        }
+
+        internal void ChangeChapter(Chapter chapterToChange, int newPosition)
+        {
+            Chapters.Find(e => e == chapterToChange).Position = newPosition;
+            OnChapterListUpdated();
+        }
+        internal void ChangeChapter(Chapter chapterToChange, string newTitle, int newPosition)
+        {
+            var chapt = Chapters.Find(e => e == chapterToChange);
+            chapt.Title = newTitle;
+            chapt.Position = newPosition;
+            OnChapterListUpdated();
+        }
+
+        internal void ChangeChapter(Chapter chapterToChange, Chapter newChapter)
+        {
+            var oldChapt = Chapters.Find(e => e == chapterToChange);
+            oldChapt.Title = newChapter.Title;
+            oldChapt.Position = newChapter.Position;
+            OnChapterListUpdated();
+        }
+        public event EventHandler ChapterListUpdated;
+
+        protected virtual void OnChapterListUpdated()
+        {
+            ChapterListUpdated?.Invoke(this, EventArgs.Empty);
         }
     }
 }

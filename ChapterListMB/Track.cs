@@ -12,23 +12,21 @@ namespace ChapterListMB
     {
 
         public ChapterList ChapterList { get; private set; }
-        public Uri FilePathUri { get; set; }
-        public TimeSpan Duration { get; set; }
+        public NowPlayingTrackInfo NowPlayingTrackInfo { get; set; }
         private readonly Uri _xmlPath;
-        public Track(Uri trackFilepath, TimeSpan trackDuration, string trackArtist, string trackTitle)
+        public Track(NowPlayingTrackInfo trackInfo)
         {
             ChapterList = new ChapterList();
-            FilePathUri = trackFilepath;
-            Duration = trackDuration;
-            _xmlPath = new Uri($"{trackFilepath}.xml", UriKind.Absolute);
+            NowPlayingTrackInfo = trackInfo;
+            _xmlPath = new Uri($"{trackInfo.FilePath}.xml", UriKind.Absolute);
             CreateChapterList();
+            ChapterList.ChapterListUpdated += ChapterList_ChapterListUpdated;
         }
-
+        
         private void CreateChapterList()
         {
             try
             {
-                
                 if (!System.IO.File.Exists(_xmlPath.LocalPath)) { return; }
                 var chaptersListDoc = XDocument.Load(_xmlPath.LocalPath);
                 if (chaptersListDoc.Root.Attribute("version").Value == "1.0")   // 1.0 is original chapterlist XML format
@@ -40,9 +38,9 @@ namespace ChapterListMB
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                
+                // ignored
             }
         }
 
@@ -64,17 +62,9 @@ namespace ChapterListMB
             xmlDoc.Save(_xmlPath.LocalPath);
         }
 
-        public void CreateNewChapter(string chapterTitle, int chapterPosition)
+        private void ChapterList_ChapterListUpdated(object sender, EventArgs e)
         {
-            ChapterList.CreateNewChapter(chapterTitle, chapterPosition);
             SaveChapterList();
         }
-
-        public void RemoveChapter(Chapter chapterToRemove)
-        {
-            ChapterList.RemoveChapter(chapterToRemove);
-            SaveChapterList();
-        }
-
     }
 }

@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace ChapterListMB
 {
-    public class Chapter
+    public class Chapter : IEquatable<Chapter>
     {
         /// <summary>
         /// Title of this chapter.
         /// </summary>
-        public string Title { get; private set; }
+        public string Title { get; set; }
         /// <summary>
         /// Timecode of this chapter's position, in H:MM:SS
         /// </summary>
@@ -26,7 +26,7 @@ namespace ChapterListMB
         /// <summary>
         /// Position of the chapter, in milliseconds.
         /// </summary>
-        public int Position { get; private set; }
+        public int Position { get; set; }
 
         /// <summary>
         /// Creates a new Chapter object.
@@ -37,6 +37,12 @@ namespace ChapterListMB
         {
             Title = title;
             Position = position;
+        }
+
+        public bool Equals(Chapter other)
+        {
+            if (other == null) return false;
+            return (Title == other.Title) && (Position == other.Position);
         }
 
         public override string ToString()
