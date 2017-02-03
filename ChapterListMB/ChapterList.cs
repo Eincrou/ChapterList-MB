@@ -9,7 +9,7 @@ namespace ChapterListMB
     public class ChapterList
     {
         public List<Chapter> Chapters { get; private set; }
-        public int NumChapters { get { return Chapters.Count; } }
+        public int NumChapters => Chapters.Count;
 
         public ChapterList()
         {
@@ -23,6 +23,8 @@ namespace ChapterListMB
         }
         public void CreateNewChapter(int position)
         {
+            if(Chapters.First().Position != 0)
+                Chapters.Add(new Chapter(0, "Start of first chapter"));
             Chapters.Add(new Chapter(position));
             SortChapters();
             OnChapterListUpdated();
@@ -40,6 +42,12 @@ namespace ChapterListMB
             var reorderedChapters = from chapter in Chapters
                                     orderby chapter.Position ascending
                                     select chapter;
+            var chapterNumber = 1;
+            foreach (var chapter in reorderedChapters)
+            {
+                chapter.SetChapterNumber(chapterNumber);
+                chapterNumber++;
+            }
             Chapters = reorderedChapters.ToList();
             OnChapterListUpdated();
         }
@@ -70,6 +78,19 @@ namespace ChapterListMB
             oldChapt.Position = newChapter.Position;
             OnChapterListUpdated();
         }
+
+        public Chapter CurrentChapterFromPosition(int position)
+        {
+            var previousChapterIndex = Chapters[0];
+            for (int i = 0; i < Chapters.Count-1; i++)
+            {
+                if ((position >= previousChapterIndex.Position) && (position < Chapters[i+1].Position))
+                    return Chapters[i];
+                previousChapterIndex = Chapters[i];
+            }
+            return Chapters[Chapters.Count - 1];
+        }
+
         public event EventHandler ChapterListUpdated;
 
         protected virtual void OnChapterListUpdated()

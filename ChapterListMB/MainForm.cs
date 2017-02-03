@@ -18,9 +18,11 @@ namespace ChapterListMB
 
         public delegate void UpdateTrack(Track track);
         public delegate void UpdateChapterList();
+        public delegate void SetCurrentChapter(int chapterNum);
 
         public UpdateTrack UpdateTrackDelegate;
         public UpdateChapterList UpdateChapterListDelegate;
+        public SetCurrentChapter SetCurrentChapterDelegate;
         public MainForm()
         {
             InitializeComponent();
@@ -29,103 +31,110 @@ namespace ChapterListMB
 
             UpdateTrackDelegate = UpdateTrackMethod;
             UpdateChapterListDelegate = UpdateChapterListMethod;
-            chaptersListBox.SelectedIndexChanged += OnChaptersListBoxSelectedIndexChanged;
-            chaptersListBox.MouseDoubleClick += OnChapterDoubleClick;
+            SetCurrentChapterDelegate = SetCurrentChapterMethod;
         }
         
         public void UpdateTrackMethod(Track track)
         {
             Track = track;
-            //chaptersListBox.DisplayMember = "Title";
-            chaptersListBox.DataSource = Track.ChapterList.Chapters;
-            artistTitleLabel.Text = $"{Track.NowPlayingTrackInfo.Artist} - \"{Track.NowPlayingTrackInfo.Title}\"";
 
             chaptersDGV.DataSource = Track.ChapterList.Chapters;
-            chaptersDGV.Columns[0].DataPropertyName = "TimeCode";
-            chaptersDGV.Columns[1].DataPropertyName = "Title";
+            chaptersDGV.Columns[1].DataPropertyName = "TimeCode";
+            chaptersDGV.Columns[2].DataPropertyName = "Title";
         }
 
         public void UpdateChapterListMethod()
         {
-            //chaptersListBox.DataSource = Track.ChapterList.Chapters;
+
         }
-        private void OnChaptersListBoxSelectedIndexChanged(object sender, EventArgs e)
+
+        public void SetCurrentChapterMethod(int chapterNum)
         {
-            if (chaptersListBox.SelectedIndex < 0) return;
-            var lb = (ListBox)sender;
-            var chapter = (lb.SelectedItem as Chapter);
-            if (chapter != null) chapterTitleTextBox.Text = chapter.Title;
+            for (int i = 0; i < chaptersDGV.RowCount; i++)
+            {
+                chaptersDGV.Rows[i].Cells[0].Value = string.Empty;
+            }
+            chaptersDGV.Rows[chapterNum].Cells[0].Value = ">>";
         }
-        private void OnChapterDoubleClick(object sender, MouseEventArgs e)
+        private Chapter GetSelectedDGVChapter()
         {
-            OnSelectedItemDoubleClickedRouted(((ListBox)sender).SelectedItem as Chapter);
+            var firstRow = chaptersDGV.Rows[0];
+            if (chaptersDGV.SelectedRows.Contains(firstRow))
+            {
+                MessageBox.Show("Cannot remove first chapter.");
+                return null;
+            }
+            if (chaptersDGV.SelectedRows.Count == 0 || chaptersDGV.SelectedRows.Count > 1)
+            {
+                MessageBox.Show("Invalid chapter selection.");
+                return null;
+            }
+            return (Chapter)chaptersDGV.SelectedRows[0].DataBoundItem;
         }
         private void addChapterButton_Click(object sender, EventArgs e)
         {
-            OnAddChapterButtonClickedRouted(chapterTitleTextBox.Text);
+
+            OnAddChapterButtonClickedRouted(e);
         }
         
         private void removeChapterButton_Click(object sender, EventArgs e)
         {
-            if (chaptersListBox.SelectedIndex < 0)
-            {
-                MessageBox.Show("Please select a chapter to remove.");
-                return;
-            }
-            OnRemoveChapterButtonClickedRouted((Chapter)chaptersListBox.SelectedItem);
-
+            var chapterToRemove = GetSelectedDGVChapter();
+            if (chapterToRemove != null)
+                OnRemoveChapterButtonClickedRouted(chapterToRemove);
         }
         private void shiftPositionBackButton_Click(object sender, EventArgs e)
         {
-            if (chaptersListBox.SelectedIndex < 0)
+            var chapterToShiftBack = GetSelectedDGVChapter();
+            if (chapterToShiftBack == null)
             {
-                MessageBox.Show("Please select a chapter.");
                 return;
             }
-            var chapt = (Chapter) chaptersListBox.SelectedItem;
-            int? newPosition = chapt.Position - ShiftAmount;
-            if (newPosition < 0) newPosition = 0;
-            OnChangeChapterRequested((Chapter) chaptersListBox.SelectedItem, null, newPosition);
+            int? newPosition = chapterToShiftBack.Position - ShiftAmount;
+            if (newPosition < 1) newPosition = 1;
+            OnChangeChapterRequested(chapterToShiftBack, null, newPosition);
         }
         private void shiftPositionFwdButton_Click(object sender, EventArgs e)
         {
-            if (chaptersListBox.SelectedIndex < 0)
+            var chapterToShiftForwards = GetSelectedDGVChapter();
+            if (chapterToShiftForwards == null)
             {
-                MessageBox.Show("Please select a chapter.");
                 return;
             }
-            var chapt = (Chapter)chaptersListBox.SelectedItem;
-            int? newPosition = chapt.Position + ShiftAmount;
+            int? newPosition = chapterToShiftForwards.Position + ShiftAmount;
             if (newPosition > Track.NowPlayingTrackInfo.Duration.TotalMilliseconds)
                 newPosition = (int)Track.NowPlayingTrackInfo.Duration.TotalMilliseconds;
-            OnChangeChapterRequested((Chapter)chaptersListBox.SelectedItem, null, newPosition);
-        }
-        private void chapterTitleTextBox_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode != Keys.Enter || chaptersListBox.SelectedIndex < 0) return;
-            var chapt = (Chapter)chaptersListBox.SelectedItem;
-            if (chapt.Title == chapterTitleTextBox.Text) return;
-            OnChangeChapterRequested(chapt, chapterTitleTextBox.Text, null);
+            OnChangeChapterRequested(chapterToShiftForwards, null, newPosition);
         }
         private void chaptersDGV_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
-        {
+        {   // Requests to set player position to chapter position.
             if (e.RowIndex >= 0 && e.RowIndex < Track.ChapterList.Chapters.Count)
             {
                 var chapt = ((sender as DataGridView).DataSource as List<Chapter>)[e.RowIndex];
                 OnSelectedItemDoubleClickedRouted(chapt);
             }
         }
+        private void chaptersDGV_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {   // Changes chapter title
+            var chapterToChangeTitle = (Chapter)chaptersDGV.Rows[e.RowIndex].DataBoundItem;
+            var newChapterTitle = (string) chaptersDGV.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
+            if (chapterToChangeTitle.Title != newChapterTitle)
+            {
+                OnChangeChapterRequested(chapterToChangeTitle, newChapterTitle, null);
+            }
+        }
 
+        
         public event EventHandler<Chapter> SelectedItemDoubleClickedRouted;
         protected virtual void OnSelectedItemDoubleClickedRouted(Chapter e)
         {
             SelectedItemDoubleClickedRouted?.Invoke(this, e);
         }
 
-        public event EventHandler<string> AddChapterButtonClickedRouted;
-        protected virtual void OnAddChapterButtonClickedRouted(string chapterTitle)
+        public event EventHandler AddChapterButtonClickedRouted;
+        protected virtual void OnAddChapterButtonClickedRouted(EventArgs e)
         {
-            AddChapterButtonClickedRouted?.Invoke(this, chapterTitle);
+            AddChapterButtonClickedRouted?.Invoke(this, e);
         }
 
         public event EventHandler<Chapter> RemoveChapterButtonClickedRouted;
@@ -137,13 +146,10 @@ namespace ChapterListMB
         public event EventHandler<ChapterChangeEventArgs> ChangeChapterRequested;
         protected virtual void OnChangeChapterRequested(Chapter c, string newTitle, int?  newPosition)
         {
-            ChapterChangeEventArgs chapterChange;
-            chapterChange = !newPosition.HasValue ? 
+            var chapterChange = !newPosition.HasValue ? 
                 new ChapterChangeEventArgs(c, newTitle, c.Position) : 
                 new ChapterChangeEventArgs(c, c.Title, newPosition.Value);
             ChangeChapterRequested?.Invoke(this, chapterChange);
         }
-
-
     }
 }

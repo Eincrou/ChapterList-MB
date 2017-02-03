@@ -28,6 +28,8 @@ namespace ChapterListMB
         /// </summary>
         public int Position { get; set; }
 
+        public int ChapterNumber { get; private set; }
+
         /// <summary>
         /// Creates a new Chapter object.
         /// </summary>
@@ -37,6 +39,11 @@ namespace ChapterListMB
         {
             Title = title;
             Position = position;
+        }
+
+        public void SetChapterNumber(int num)
+        {
+            ChapterNumber = num;
         }
 
         public bool Equals(Chapter other)

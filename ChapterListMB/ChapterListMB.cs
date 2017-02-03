@@ -13,30 +13,32 @@ namespace MusicBeePlugin
     public partial class Plugin
     {
         private MusicBeeApiInterface mbApiInterface;
-        private PluginInfo about = new PluginInfo();
+        private PluginInfo _about = new PluginInfo();
         private MainForm _mainForm;
         private Track _track;
+        private Timer _timer;
+        private int _currentChapterIndex;
 
         public PluginInfo Initialise(IntPtr apiInterfacePtr)
         {
             mbApiInterface = new MusicBeeApiInterface();
             mbApiInterface.Initialise(apiInterfacePtr);
-            about.PluginInfoVersion = PluginInfoVersion;
-            about.Name = "Chapter List | MB";
-            about.Description = "Creates chapters to jump to a position in a track.";
-            about.Author = "Eincrou";
-            about.TargetApplication = "";   // current only applies to artwork, lyrics or instant messenger name that appears in the provider drop down selector or target Instant Messenger
-            about.Type = PluginType.General;
-            about.VersionMajor = 1;  // your plugin version
-            about.VersionMinor = 0;
-            about.Revision = 1;
-            about.MinInterfaceVersion = MinInterfaceVersion;
-            about.MinApiRevision = MinApiRevision;
-            about.ReceiveNotifications = (ReceiveNotificationFlags.PlayerEvents);
-            about.ConfigurationPanelHeight = 0;   // height in pixels that musicbee should reserve in a panel for config settings. When set, a handle to an empty panel will be passed to the Configure function
+            _about.PluginInfoVersion = PluginInfoVersion;
+            _about.Name = "Chapter List | MB";
+            _about.Description = "Creates chapters to jump to a position in a track.";
+            _about.Author = "Eincrou";
+            _about.TargetApplication = "";   // current only applies to artwork, lyrics or instant messenger name that appears in the provider drop down selector or target Instant Messenger
+            _about.Type = PluginType.General;
+            _about.VersionMajor = 1;  // your plugin version
+            _about.VersionMinor = 0;
+            _about.Revision = 1;
+            _about.MinInterfaceVersion = MinInterfaceVersion;
+            _about.MinApiRevision = MinApiRevision;
+            _about.ReceiveNotifications = (ReceiveNotificationFlags.PlayerEvents);
+            _about.ConfigurationPanelHeight = 0;   // height in pixels that musicbee should reserve in a panel for config settings. When set, a handle to an empty panel will be passed to the Configure function
 
             CreateMenuItem();
-            return about;
+            return _about;
         }
 
         public bool Configure(IntPtr panelHandle)
@@ -87,15 +89,13 @@ namespace MusicBeePlugin
             {
                 case NotificationType.PluginStartup:
                     // perform startup initialisation
-                    if (_mainForm != null) return;
-                   // _mainForm = new MainForm();
-                   // _mainForm.Show();
+                    //if (_mainForm != null) return;
+                    _timer = new Timer(100);
+                    _timer.Elapsed += _timer_Elapsed;
                     switch (mbApiInterface.Player_GetPlayState())
                     {
                         case PlayState.Playing:
-                        case PlayState.Paused:
-                        case PlayState.Loading:
-                            // ...
+                            _timer.Start();
                             break;
                     }
                     break;
@@ -104,7 +104,33 @@ namespace MusicBeePlugin
                     _track = GetTrack();
                     _mainForm.Invoke(_mainForm.UpdateTrackDelegate, _track);
                     break;
+
+                case NotificationType.PlayStateChanged:
+                    switch (mbApiInterface.Player_GetPlayState())
+                    {
+                        case PlayState.Playing:
+                            if (!_timer.Enabled) _timer.Start();
+                            break;
+                        case PlayState.Paused:
+                            if (_timer.Enabled) _timer.Stop();
+                            break;
+                        case PlayState.Stopped:
+                            if (_timer.Enabled) _timer.Stop();
+                            break;
+                        case PlayState.Undefined:
+                            if (_timer.Enabled) _timer.Stop();
+                            break;
+                    }
+                    break;
             }
+        }
+
+        private void _timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            var playerPosition = mbApiInterface.Player_GetPosition();
+            var chapterNum = _track.ChapterList.CurrentChapterFromPosition(playerPosition).ChapterNumber;
+            if (_currentChapterIndex != chapterNum)
+                _mainForm.Invoke(_mainForm.SetCurrentChapterDelegate, chapterNum);
         }
 
         private Track GetTrack()
@@ -162,6 +188,8 @@ namespace MusicBeePlugin
                 _mainForm.Invoke(_mainForm.UpdateTrackDelegate, _track);
             }
         }
+        
+
 
         private void SubscribeToEvents()
         {
@@ -170,19 +198,14 @@ namespace MusicBeePlugin
             _mainForm.RemoveChapterButtonClickedRouted += MainFormOnRemoveChapterButtonClickedRouted;
             _mainForm.ChangeChapterRequested += MainFormOnChangeChapterRequested;
         }
-
-
         private void MainFormOnSelectedItemDoubleClickedRouted(object sender, Chapter chapter)
         {
             mbApiInterface.Player_SetPosition(chapter.Position);
         }
-        private void MainFormOnAddChapterButtonClickedRouted(object sender, string newChapterTitle)
+        private void MainFormOnAddChapterButtonClickedRouted(object sender, EventArgs e)
         {
             var currentPosition = mbApiInterface.Player_GetPosition();
-            if (newChapterTitle == string.Empty)
-                _track.ChapterList.CreateNewChapter(currentPosition);
-            else
-            _track.ChapterList.CreateNewChapter(newChapterTitle, currentPosition);
+            _track.ChapterList.CreateNewChapter(currentPosition);
             _mainForm.Invoke(_mainForm.UpdateTrackDelegate, _track);
         }
         private void MainFormOnRemoveChapterButtonClickedRouted(object sender, Chapter e)
@@ -195,5 +218,6 @@ namespace MusicBeePlugin
             _track.ChapterList.ChangeChapter(e.ChapterToChange, new Chapter(e.Position, e.Title));
            _mainForm.Invoke(_mainForm.UpdateTrackDelegate, _track);
         }
+        
     }
 }

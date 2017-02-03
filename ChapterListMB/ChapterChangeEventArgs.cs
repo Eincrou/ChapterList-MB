@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ChapterListMB
 {
-    public class ChapterChangeEventArgs
+    public class ChapterChangeEventArgs : EventArgs
     {
         public Chapter ChapterToChange { get; set; }
         public string Title { get; set; }
