@@ -58,6 +58,7 @@
     <Compile Include="NowPlayingTrackInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ChapterListMB.cs" />
+    <Compile Include="RepeatChaptersEventArgs.cs" />
     <Compile Include="Track.cs" />
   </ItemGroup>
   <ItemGroup>

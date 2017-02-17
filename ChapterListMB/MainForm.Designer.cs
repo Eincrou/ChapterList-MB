@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.addChapterButton = new System.Windows.Forms.Button();
             this.removeChapterButton = new System.Windows.Forms.Button();
             this.shiftPositionBackButton = new System.Windows.Forms.Button();
@@ -37,8 +37,11 @@
             this.Icon = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.positionCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.titleCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.statusBar1 = new System.Windows.Forms.StatusBar();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.titleArtistStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.chaptersCountStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             ((System.ComponentModel.ISupportInitialize)(this.chaptersDGV)).BeginInit();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // addChapterButton
@@ -46,29 +49,29 @@
             this.addChapterButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.addChapterButton.Location = new System.Drawing.Point(11, 406);
             this.addChapterButton.Name = "addChapterButton";
-            this.addChapterButton.Size = new System.Drawing.Size(91, 34);
+            this.addChapterButton.Size = new System.Drawing.Size(40, 35);
             this.addChapterButton.TabIndex = 0;
-            this.addChapterButton.Text = "Add Chapter";
+            this.addChapterButton.Text = "Add";
             this.addChapterButton.UseVisualStyleBackColor = true;
             this.addChapterButton.Click += new System.EventHandler(this.addChapterButton_Click);
             // 
             // removeChapterButton
             // 
             this.removeChapterButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.removeChapterButton.Location = new System.Drawing.Point(108, 406);
+            this.removeChapterButton.Location = new System.Drawing.Point(57, 406);
             this.removeChapterButton.Name = "removeChapterButton";
-            this.removeChapterButton.Size = new System.Drawing.Size(104, 34);
+            this.removeChapterButton.Size = new System.Drawing.Size(57, 35);
             this.removeChapterButton.TabIndex = 2;
-            this.removeChapterButton.Text = "Remove Chapter";
+            this.removeChapterButton.Text = "Remove";
             this.removeChapterButton.UseVisualStyleBackColor = true;
             this.removeChapterButton.Click += new System.EventHandler(this.removeChapterButton_Click);
             // 
             // shiftPositionBackButton
             // 
             this.shiftPositionBackButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.shiftPositionBackButton.Location = new System.Drawing.Point(230, 406);
+            this.shiftPositionBackButton.Location = new System.Drawing.Point(226, 406);
             this.shiftPositionBackButton.Name = "shiftPositionBackButton";
-            this.shiftPositionBackButton.Size = new System.Drawing.Size(40, 34);
+            this.shiftPositionBackButton.Size = new System.Drawing.Size(40, 35);
             this.shiftPositionBackButton.TabIndex = 5;
             this.shiftPositionBackButton.Text = "<<";
             this.shiftPositionBackButton.UseVisualStyleBackColor = true;
@@ -77,9 +80,9 @@
             // shiftPositionFwdButton
             // 
             this.shiftPositionFwdButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.shiftPositionFwdButton.Location = new System.Drawing.Point(276, 406);
+            this.shiftPositionFwdButton.Location = new System.Drawing.Point(272, 407);
             this.shiftPositionFwdButton.Name = "shiftPositionFwdButton";
-            this.shiftPositionFwdButton.Size = new System.Drawing.Size(40, 34);
+            this.shiftPositionFwdButton.Size = new System.Drawing.Size(40, 35);
             this.shiftPositionFwdButton.TabIndex = 6;
             this.shiftPositionFwdButton.Text = ">>";
             this.shiftPositionFwdButton.UseVisualStyleBackColor = true;
@@ -91,8 +94,8 @@
             this.chaptersDGV.AllowUserToDeleteRows = false;
             this.chaptersDGV.AllowUserToResizeColumns = false;
             this.chaptersDGV.AllowUserToResizeRows = false;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
-            this.chaptersDGV.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            this.chaptersDGV.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.chaptersDGV.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -105,7 +108,7 @@
             this.positionCol,
             this.titleCol});
             this.chaptersDGV.Location = new System.Drawing.Point(12, 12);
-            this.chaptersDGV.MinimumSize = new System.Drawing.Size(300, 300);
+            this.chaptersDGV.MinimumSize = new System.Drawing.Size(200, 200);
             this.chaptersDGV.MultiSelect = false;
             this.chaptersDGV.Name = "chaptersDGV";
             this.chaptersDGV.RowHeadersVisible = false;
@@ -114,6 +117,7 @@
             this.chaptersDGV.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.chaptersDGV.Size = new System.Drawing.Size(300, 380);
             this.chaptersDGV.TabIndex = 7;
+            this.chaptersDGV.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.chaptersDGV_CellClick);
             this.chaptersDGV.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.chaptersDGV_CellEndEdit);
             this.chaptersDGV.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.chaptersDGV_CellMouseDoubleClick);
             // 
@@ -143,20 +147,38 @@
             this.titleCol.Name = "titleCol";
             this.titleCol.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
-            // statusBar1
+            // statusStrip1
             // 
-            this.statusBar1.Location = new System.Drawing.Point(0, 451);
-            this.statusBar1.Name = "statusBar1";
-            this.statusBar1.Size = new System.Drawing.Size(324, 22);
-            this.statusBar1.TabIndex = 8;
-            this.statusBar1.Text = "s";
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.titleArtistStatusLabel,
+            this.chaptersCountStatusLabel});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 449);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(324, 24);
+            this.statusStrip1.TabIndex = 8;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // titleArtistStatusLabel
+            // 
+            this.titleArtistStatusLabel.Name = "titleArtistStatusLabel";
+            this.titleArtistStatusLabel.Size = new System.Drawing.Size(55, 19);
+            this.titleArtistStatusLabel.Text = "titleArtist";
+            // 
+            // chaptersCountStatusLabel
+            // 
+            this.chaptersCountStatusLabel.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
+            this.chaptersCountStatusLabel.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.chaptersCountStatusLabel.Name = "chaptersCountStatusLabel";
+            this.chaptersCountStatusLabel.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.chaptersCountStatusLabel.Size = new System.Drawing.Size(56, 19);
+            this.chaptersCountStatusLabel.Text = "chapters";
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(324, 473);
-            this.Controls.Add(this.statusBar1);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.chaptersDGV);
             this.Controls.Add(this.shiftPositionFwdButton);
             this.Controls.Add(this.shiftPositionBackButton);
@@ -165,7 +187,10 @@
             this.Name = "MainForm";
             this.Text = "Chapter List | MB";
             ((System.ComponentModel.ISupportInitialize)(this.chaptersDGV)).EndInit();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -176,9 +201,11 @@
         private System.Windows.Forms.Button shiftPositionBackButton;
         private System.Windows.Forms.Button shiftPositionFwdButton;
         private System.Windows.Forms.DataGridView chaptersDGV;
-        private System.Windows.Forms.StatusBar statusBar1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Icon;
         private System.Windows.Forms.DataGridViewTextBoxColumn positionCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn titleCol;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripStatusLabel titleArtistStatusLabel;
+        private System.Windows.Forms.ToolStripStatusLabel chaptersCountStatusLabel;
     }
 }

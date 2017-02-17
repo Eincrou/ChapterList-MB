@@ -15,10 +15,12 @@ namespace ChapterListMB
         public Track Track { get; set; }
         private int ShiftAmount { get; } = 250;
         private TimeSpan _shiftMillseconds;
+        private int _repeatIndexA = 0;
+        private int _repeatIndexB = 0;
 
         public delegate void UpdateTrack(Track track);
         public delegate void UpdateChapterList();
-        public delegate void SetCurrentChapter(int chapterNum);
+        public delegate void SetCurrentChapter(Chapter chapter);
 
         public UpdateTrack UpdateTrackDelegate;
         public UpdateChapterList UpdateChapterListDelegate;
@@ -41,6 +43,9 @@ namespace ChapterListMB
             chaptersDGV.DataSource = Track.ChapterList.Chapters;
             chaptersDGV.Columns[1].DataPropertyName = "TimeCode";
             chaptersDGV.Columns[2].DataPropertyName = "Title";
+
+           // statusBar1.Text =$"{Track.NowPlayingTrackInfo.Artist} - {Track.NowPlayingTrackInfo.Title}";
+            titleArtistStatusLabel.Text = $"{Track.NowPlayingTrackInfo.Artist} – {Track.NowPlayingTrackInfo.Title}";
         }
 
         public void UpdateChapterListMethod()
@@ -48,13 +53,21 @@ namespace ChapterListMB
 
         }
 
-        public void SetCurrentChapterMethod(int chapterNum)
+        public void SetCurrentChapterMethod(Chapter chapter)
         {
             for (int i = 0; i < chaptersDGV.RowCount; i++)
             {
-                chaptersDGV.Rows[i].Cells[0].Value = string.Empty;
+                if (i == chapter.ChapterNumber)
+                    chaptersDGV.Rows[chapter.ChapterNumber - 1].Cells[0].Value = ">>";
+                else if (i == _repeatIndexA)
+                    chaptersDGV.Rows[i].Cells[0].Value = "A";
+                else if (i == _repeatIndexB)
+                    chaptersDGV.Rows[i].Cells[0].Value = "B";
+                else
+                    chaptersDGV.Rows[i].Cells[0].Value = string.Empty;
             }
-            chaptersDGV.Rows[chapterNum].Cells[0].Value = ">>";
+            
+            chaptersCountStatusLabel.Text = $"{chapter.ChapterNumber}/{Track.ChapterList.NumChapters} – {chapter.Title}";
         }
         private Chapter GetSelectedDGVChapter()
         {
@@ -151,5 +164,59 @@ namespace ChapterListMB
                 new ChapterChangeEventArgs(c, c.Title, newPosition.Value);
             ChangeChapterRequested?.Invoke(this, chapterChange);
         }
+        public event EventHandler<RepeatChaptersEventArgs> RepeatChaptersRequested;
+        protected virtual void OnRepeatChaptersRequested(Chapter a, Chapter b)
+        {
+            var chaptersToRepeat = new RepeatChaptersEventArgs(a, b);
+            RepeatChaptersRequested?.Invoke(this, chaptersToRepeat);
+        }
+
+        private void chaptersDGV_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if((e.ColumnIndex == 0) )
+            {
+                if((_repeatIndexA == 0) && (_repeatIndexB == 0) && (e.RowIndex != chaptersDGV.RowCount) ) // Can't set A to last chapter
+                {
+                    if(_repeatIndexA > 0 && _repeatIndexB == 0)
+                    {
+                        _repeatIndexA = 0;
+                        chaptersDGV.Rows[e.RowIndex].Cells[0].Value = string.Empty;
+                    }
+                    else
+                    {
+                        _repeatIndexA = e.RowIndex;
+                        chaptersDGV.Rows[e.RowIndex].Cells[0].Value = "A";
+                    }                    
+                }
+                else if ((_repeatIndexB == 0) && (e.RowIndex > _repeatIndexA))
+                {
+                    if (_repeatIndexB > 0)
+                    {
+                        _repeatIndexB = 0;
+                        chaptersDGV.Rows[e.RowIndex].Cells[0].Value = string.Empty;
+                    }
+                    else
+                    {
+                        _repeatIndexB = e.RowIndex;
+                        chaptersDGV.Rows[e.RowIndex].Cells[0].Value = "B";
+                    }
+                    
+                }
+                if(_repeatIndexA > 0 && _repeatIndexB < 1)
+                {
+                    var chapterA = Track.ChapterList.Chapters[_repeatIndexA];
+                    var chapterB = Track.ChapterList.Chapters[_repeatIndexA+1];   // Use next chapter if no 'B' has been set.
+                    OnRepeatChaptersRequested(chapterA, chapterB);
+                }
+                else if (_repeatIndexA > 0 && _repeatIndexB > 0)
+                {
+                    var chapterA = Track.ChapterList.Chapters[_repeatIndexA];
+                    var chapterB = Track.ChapterList.Chapters[_repeatIndexB];
+                    OnRepeatChaptersRequested(chapterA, chapterB);
+                }                              
+            }
+        }
+
+
     }
 }

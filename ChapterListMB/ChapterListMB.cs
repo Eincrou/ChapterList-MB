@@ -17,7 +17,9 @@ namespace MusicBeePlugin
         private MainForm _mainForm;
         private Track _track;
         private Timer _timer;
-        private int _currentChapterIndex;
+        private Chapter _currentChapter;
+        private Chapter _repeatChapterA;
+        private Chapter _repeatChapterB;
 
         public PluginInfo Initialise(IntPtr apiInterfacePtr)
         {
@@ -95,6 +97,7 @@ namespace MusicBeePlugin
                     switch (mbApiInterface.Player_GetPlayState())
                     {
                         case PlayState.Playing:
+                            _currentChapter = _track.ChapterList.Chapters.First();
                             _timer.Start();
                             break;
                     }
@@ -104,8 +107,12 @@ namespace MusicBeePlugin
                     _track = GetTrack();
                     _mainForm.Invoke(_mainForm.UpdateTrackDelegate, _track);
                     break;
-
+                case NotificationType.TrackChanging:
+                    _currentChapter = _track.ChapterList.Chapters.First();
+                    if (!_timer.Enabled) _timer.Stop();                    
+                    break;
                 case NotificationType.PlayStateChanged:
+                    if (_track == null) return;
                     switch (mbApiInterface.Player_GetPlayState())
                     {
                         case PlayState.Playing:
@@ -127,10 +134,21 @@ namespace MusicBeePlugin
 
         private void _timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
+            if (_track.ChapterList.Chapters.Count == 0) return;
             var playerPosition = mbApiInterface.Player_GetPosition();
-            var chapterNum = _track.ChapterList.CurrentChapterFromPosition(playerPosition).ChapterNumber;
-            if (_currentChapterIndex != chapterNum)
-                _mainForm.Invoke(_mainForm.SetCurrentChapterDelegate, chapterNum);
+            var currentChapter = _track.ChapterList.CurrentChapterFromPosition(playerPosition);
+            if (_currentChapter.ChapterNumber != currentChapter.ChapterNumber)
+            {
+                _mainForm.Invoke(_mainForm.SetCurrentChapterDelegate, currentChapter);
+                _currentChapter = currentChapter;
+            }
+            if ((_repeatChapterA != null) && (_repeatChapterB != null)) // Repeat chapters
+            {
+                if (playerPosition >= _repeatChapterB.Position)
+                {
+                    mbApiInterface.Player_SetPosition(_repeatChapterA.Position);
+                }
+            }
         }
 
         private Track GetTrack()
@@ -186,6 +204,11 @@ namespace MusicBeePlugin
             {
                 _track = GetTrack();
                 _mainForm.Invoke(_mainForm.UpdateTrackDelegate, _track);
+                if (mbApiInterface.Player_GetPlayState() == PlayState.Playing)
+                {
+                    _currentChapter = _track.ChapterList.Chapters.First();
+                    _timer.Start();
+                }
             }
         }
         
@@ -197,7 +220,15 @@ namespace MusicBeePlugin
             _mainForm.AddChapterButtonClickedRouted += MainFormOnAddChapterButtonClickedRouted;
             _mainForm.RemoveChapterButtonClickedRouted += MainFormOnRemoveChapterButtonClickedRouted;
             _mainForm.ChangeChapterRequested += MainFormOnChangeChapterRequested;
+            _mainForm.RepeatChaptersRequested += MainFormRepeatChaptersRequested;
         }
+
+        private void MainFormRepeatChaptersRequested(object sender, RepeatChaptersEventArgs e)
+        {
+            _repeatChapterA = e.ChapterA;
+            _repeatChapterB = e.ChapterB;
+        }
+
         private void MainFormOnSelectedItemDoubleClickedRouted(object sender, Chapter chapter)
         {
             mbApiInterface.Player_SetPosition(chapter.Position);

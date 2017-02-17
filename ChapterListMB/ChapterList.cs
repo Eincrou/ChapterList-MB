@@ -8,22 +8,37 @@ namespace ChapterListMB
 {
     public class ChapterList
     {
+        /// <summary>
+        /// Gets the list of all chapters in this ChapterList.
+        /// </summary>
         public List<Chapter> Chapters { get; private set; }
+        /// <summary>
+        /// Gets the total number of chapters in this ChapterList.
+        /// </summary>
         public int NumChapters => Chapters.Count;
 
         public ChapterList()
         {
             Chapters = new List<Chapter>();
         }
+        /// <summary>
+        /// Creates and adds a new chapter to the list, based on specified parameters.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="position"></param>
         public void CreateNewChapter(string name, int position)
         {
             Chapters.Add(new Chapter(position, name));
             SortChapters();
             OnChapterListUpdated();
         }
+        /// <summary>
+        /// Creates and adds a new chapter to the list based on position, with a default chapter name.
+        /// </summary>
+        /// <param name="position"></param>
         public void CreateNewChapter(int position)
         {
-            if(Chapters.First().Position != 0)
+            if((Chapters.Count == 0) || (Chapters.First().Position != 0))
                 Chapters.Add(new Chapter(0, "Start of first chapter"));
             Chapters.Add(new Chapter(position));
             SortChapters();

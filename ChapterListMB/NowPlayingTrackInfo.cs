@@ -13,7 +13,14 @@ namespace ChapterListMB
         public string Album { get; set; }
         public TimeSpan Duration { get; set; }
         public Uri FilePath { get; set; }
-
+        /// <summary>
+        /// Creates a new NowPlayingTrackInfo object.
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="artist"></param>
+        /// <param name="album"></param>
+        /// <param name="duration"></param>
+        /// <param name="filepath"></param>
         public NowPlayingTrackInfo(string title, string artist, string album, TimeSpan duration, Uri filepath)
         {
             Title = title;
