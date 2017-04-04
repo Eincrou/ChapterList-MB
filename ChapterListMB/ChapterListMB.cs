@@ -97,7 +97,7 @@ namespace MusicBeePlugin
                     switch (mbApiInterface.Player_GetPlayState())
                     {
                         case PlayState.Playing:
-                            _currentChapter = _track.ChapterList.Chapters.First();
+                            //_currentChapter = _track.ChapterList.Chapters?.First();
                             _timer.Start();
                             break;
                     }
@@ -108,11 +108,12 @@ namespace MusicBeePlugin
                     _mainForm.Invoke(_mainForm.UpdateTrackDelegate, _track);
                     break;
                 case NotificationType.TrackChanging:
-                    _currentChapter = _track.ChapterList.Chapters.First();
-                    if (!_timer.Enabled) _timer.Stop();                    
+                    if (!_timer.Enabled) _timer.Stop();
+                    //_currentChapter = _track.ChapterList.Chapters?.First();
                     break;
                 case NotificationType.PlayStateChanged:
                     if (_track == null) return;
+                    //_currentChapter = _track.ChapterList.Chapters?.First();
                     switch (mbApiInterface.Player_GetPlayState())
                     {
                         case PlayState.Playing:
@@ -136,8 +137,8 @@ namespace MusicBeePlugin
         {
             if (_track.ChapterList.Chapters.Count == 0) return;
             var playerPosition = mbApiInterface.Player_GetPosition();
-            var currentChapter = _track.ChapterList.CurrentChapterFromPosition(playerPosition);
-            if (_currentChapter.ChapterNumber != currentChapter.ChapterNumber)
+            var currentChapter = _track.ChapterList.GetCurrentChapterFromPosition(playerPosition);
+            if (_currentChapter?.ChapterNumber != currentChapter.ChapterNumber)
             {
                 _mainForm.Invoke(_mainForm.SetCurrentChapterDelegate, currentChapter);
                 _currentChapter = currentChapter;
@@ -203,6 +204,7 @@ namespace MusicBeePlugin
             if (mbApiInterface.Player_GetPlayState() != PlayState.Undefined)
             {
                 _track = GetTrack();
+                if (_track.ChapterList.Chapters == null) return;
                 _mainForm.Invoke(_mainForm.UpdateTrackDelegate, _track);
                 if (mbApiInterface.Player_GetPlayState() == PlayState.Playing)
                 {
@@ -227,6 +229,7 @@ namespace MusicBeePlugin
         {
             _repeatChapterA = e.ChapterA;
             _repeatChapterB = e.ChapterB;
+
         }
 
         private void MainFormOnSelectedItemDoubleClickedRouted(object sender, Chapter chapter)

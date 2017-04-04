@@ -1,0 +1,895 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="MusicBeePlugin.Plugin" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <NestedTypes>
+      <Delegate Name="MusicBeePlugin.Plugin.Sync_FileEndDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Player_GetPlayStateDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.NowPlayingList_GetFileTagsDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Enum Name="MusicBeePlugin.Plugin.ElementState" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="MusicBeePlugin.Plugin.LibraryCategory" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Delegate Name="MusicBeePlugin.Plugin.Setting_GetDefaultFontDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Player_SetEqualiserEnabledDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Player_GetEqualiserEnabledDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Setting_GetValueDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Playlist_CreatePlaylistDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.MB_GetLocalisationDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Enum Name="MusicBeePlugin.Plugin.PlaylistFormat" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Delegate Name="MusicBeePlugin.Plugin.Library_GetFileTagDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Player_GetShowRatingLoveDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.MB_SendNotificationDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.NowPlaying_GetArtistPictureThumbDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.NowPlayingList_ActionDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.MB_ShowNowPlayingAssistantDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.NowPlayingList_RemoveAtDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Library_FindDevicePersistentIdDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Playlist_QueryGetNextPlaylistDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Enum Name="MusicBeePlugin.Plugin.LyricsType" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Delegate Name="MusicBeePlugin.Plugin.Library_QueryGetAllFilesDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.MB_OpenFilterInTabDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Playlist_SetFilesDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.MB_AddTreeNodeDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Enum Name="MusicBeePlugin.Plugin.DataType" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="MusicBeePlugin.Plugin.PlayState" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Delegate Name="MusicBeePlugin.Plugin.Library_QueryLookupTableDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Enum Name="MusicBeePlugin.Plugin.MetaDataType" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Delegate Name="MusicBeePlugin.Plugin.Library_GetDevicePersistentIdDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Enum Name="MusicBeePlugin.Plugin.DownloadTarget" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Delegate Name="MusicBeePlugin.Plugin.MB_ShowPluginViewDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Setting_GetFieldNameDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Setting_GetLastFmUserIdDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Player_UpdatePlayStatisticsDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Enum Name="MusicBeePlugin.Plugin.MusicBeeVersion" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="MusicBeePlugin.Plugin.ReplayGainMode" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Delegate Name="MusicBeePlugin.Plugin.MB_TraceDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Sync_FileStartDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Player_SetRepeatDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Player_SetScrobbleEnabledDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Playlist_RemoveAtDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Enum Name="MusicBeePlugin.Plugin.SettingId" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="MusicBeePlugin.Plugin.RepeatMode" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Delegate Name="MusicBeePlugin.Plugin.Library_QuerySimilarArtistsDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.MB_RemovePanelDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.NowPlaying_GetSpectrumDataDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Enum Name="MusicBeePlugin.Plugin.DeviceIdType" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Delegate Name="MusicBeePlugin.Plugin.MB_SetPanelScrollableAreaDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Player_QueueRandomTracksDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Library_GetArtistPictureDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Enum Name="MusicBeePlugin.Plugin.NotificationType" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="MusicBeePlugin.Plugin.PlayButtonType" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Delegate Name="MusicBeePlugin.Plugin.Playlist_IsInListDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Enum Name="MusicBeePlugin.Plugin.ElementComponent" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Delegate Name="MusicBeePlugin.Plugin.MB_RefreshPanelsDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.NowPlaying_GetSoundGraphDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Library_GetArtworkDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Enum Name="MusicBeePlugin.Plugin.PlayStatisticType" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Delegate Name="MusicBeePlugin.Plugin.Setting_GetSkinElementColourDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Setting_GetPersistentStoragePathDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.NowPlayingList_GetFileUrlDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Player_GetShowTimeRemainingDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Library_SetDevicePersistentIdDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.NowPlayingList_GetFilePropertyDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Player_GetCrossfadeDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.MB_DownloadFileDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Player_ShowEqualiserDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Playlist_DeletePlaylistDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.MB_AddMenuItemDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Player_GetScrobbleEnabledDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Library_GetFilePropertyDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Enum Name="MusicBeePlugin.Plugin.CallbackType" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Delegate Name="MusicBeePlugin.Plugin.Player_GetAutoDjEnabledDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Enum Name="MusicBeePlugin.Plugin.PluginType" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Class Name="MusicBeePlugin.Plugin.PluginInfo" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Delegate Name="MusicBeePlugin.Plugin.MB_InvokeCommandDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Player_GetShowRatingTrackDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Player_SetCrossfadeDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Pending_GetFileUrlDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Player_OpenStreamHandleDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Player_GetVolumeDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Library_GetArtworkExDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Player_GetDspEnabledDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.NowPlayingList_GetFileTagDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.NowPlaying_IsSoundtrackDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.MB_SetBackgroundTaskMessageDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Player_SetDspEnabledDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Playlist_PlayNowDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.NowPlayingList_FileActionDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Playlist_GetNameDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Enum Name="MusicBeePlugin.Plugin.PluginPanelDock" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Delegate Name="MusicBeePlugin.Plugin.Player_SetMuteDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Library_QueryFilesDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Library_QueryGetLookupTableValueDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Library_QueryFilesExDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.MB_RegisterCommandDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.NowPlayingList_FilesActionDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Player_GetStopAfterCurrentEnabledDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.MB_GetPluginViewInformationDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Enum Name="MusicBeePlugin.Plugin.PluginCloseReason" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Delegate Name="MusicBeePlugin.Plugin.Player_SetShuffleDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Player_SetReplayGainModeDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Player_GetPositionDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.NowPlayingList_IsAnyFollowingTracksDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Struct Name="MusicBeePlugin.Plugin.MusicBeeApiInterface" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Delegate Name="MusicBeePlugin.Plugin.Setting_GetDataTypeDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.NowPlaying_GetFileUrlDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Library_GetSyncDeltaDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Player_GetButtonEnabledDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Enum Name="MusicBeePlugin.Plugin.WindowState" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Delegate Name="MusicBeePlugin.Plugin.Player_GetReplayGainModeDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Playlist_AddFilesDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.MB_UninistallPluginDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Player_SetPositionDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Player_SetOutputDeviceDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Setting_GetWebProxyDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.NowPlayingList_MoveFilesDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Library_AddFileToLibraryDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Playlist_QueryFilesDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Library_GetLyricsDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Player_ActionDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Enum Name="MusicBeePlugin.Plugin.FilePropertyType" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Delegate Name="MusicBeePlugin.Plugin.NowPlaying_GetArtworkDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.NowPlayingList_GetNextIndexDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.MB_ReleaseStringDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Library_GetArtistPictureThumbDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Library_GetFileTagsDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Enum Name="MusicBeePlugin.Plugin.EncodeQuality" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Delegate Name="MusicBeePlugin.Plugin.NowPlaying_GetArtistPictureUrlsDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.NowPlaying_GetArtistPictureDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.NowPlaying_GetDurationDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Library_QueryGetNextFileDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Enum Name="MusicBeePlugin.Plugin.ReceiveNotificationFlags" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Delegate Name="MusicBeePlugin.Plugin.Library_SetFileTagDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Enum Name="MusicBeePlugin.Plugin.SkinElement" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Delegate Name="MusicBeePlugin.Plugin.NowPlaying_GetFileTagsDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.MB_GetPanelBoundsDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Enum Name="MusicBeePlugin.Plugin.ComparisonType" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Delegate Name="MusicBeePlugin.Plugin.MB_WindowHandleDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Enum Name="MusicBeePlugin.Plugin.Command" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="MusicBeePlugin.Plugin.FileCodec" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Delegate Name="MusicBeePlugin.Plugin.NowPlaying_GetLyricsDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Pending_GetFilePropertyDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Playlist_QueryFilesExDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.NowPlayingList_IsAnyPriorTracksDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Playlist_QueryPlaylistsDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Playlist_GetTypeDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Player_GetRepeatDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.MB_SetWindowSizeDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.NowPlaying_GetFileTagDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Player_GetOutputDevicesDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Player_SetVolumeDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.MB_CreateParameterisedBackgroundTaskDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Setting_IsWindowBordersSkinnedDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.MB_ShowVisualiserDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Library_CommitTagsToFileDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.MB_CreateBackgroundTaskDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Playlist_MoveFilesDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.NowPlaying_GetFilePropertyDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Player_GetMuteDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Player_GetShuffleDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.MB_GetVisualiserInformationDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Setting_GetFileConvertCommandLineDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Library_GetArtistPictureUrlsDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.NowPlayingList_GetCurrentIndexDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Setting_GetSkinDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.Library_SetArtworkExDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Enum Name="MusicBeePlugin.Plugin.PictureLocations" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Delegate Name="MusicBeePlugin.Plugin.Pending_GetFileTagDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MusicBeePlugin.Plugin.MB_AddPanelDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MusicBeeInterface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>EQAAAABBACAhQQAgIAjAQCCAABIABMAAEQAMAASAIAA=</HashCode>
+      <FileName>ChapterListMB.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChapterListMB.ChapterList" Collapsed="true">
+    <Position X="2" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABACAAAQCAIAAAAQAAIAAAAAAAAAAAAAAIAAAAAIAA=</HashCode>
+      <FileName>ChapterList.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChapterListMB.Chapter" Collapsed="true">
+    <Position X="4.75" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAEAkgAAAAQAAAAAAAAAQAAAAAAAAAEA=</HashCode>
+      <FileName>Chapter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.1" />
+  </Class>
+  <Class Name="ChapterListMB.Track" Collapsed="true">
+    <Position X="6.5" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAEAAAAAAAAAACAAAAAQAAAAAAARAAAIAAA=</HashCode>
+      <FileName>Track.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

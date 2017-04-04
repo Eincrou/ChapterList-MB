@@ -11,7 +11,7 @@ namespace ChapterListMB
         /// <summary>
         /// Gets the list of all chapters in this ChapterList.
         /// </summary>
-        public List<Chapter> Chapters { get; private set; }
+        public List<Chapter> Chapters { get; private set; } = new List<Chapter>();
         /// <summary>
         /// Gets the total number of chapters in this ChapterList.
         /// </summary>
@@ -19,7 +19,11 @@ namespace ChapterListMB
 
         public ChapterList()
         {
-            Chapters = new List<Chapter>();
+            XmlOperations.ReadChapterListFromXml(this);
+        }
+        public ChapterList(List<Chapter> chapters)
+        {
+            Chapters = chapters;
         }
         /// <summary>
         /// Creates and adds a new chapter to the list, based on specified parameters.
@@ -52,6 +56,10 @@ namespace ChapterListMB
             OnChapterListUpdated();
         }
 
+        public void SaveChaptersToFile()
+        {
+            XmlOperations.SaveChapterListToXml(this);
+        }
         private void SortChapters()
         {
             var reorderedChapters = from chapter in Chapters
@@ -94,17 +102,22 @@ namespace ChapterListMB
             OnChapterListUpdated();
         }
 
-        public Chapter CurrentChapterFromPosition(int position)
+        public Chapter GetCurrentChapterFromPosition(int position)
         {
-            var previousChapterIndex = Chapters[0];
-            for (int i = 0; i < Chapters.Count-1; i++)
+            for (int i = 1; i < Chapters.Count; i++)
             {
-                if ((position >= previousChapterIndex.Position) && (position < Chapters[i+1].Position))
-                    return Chapters[i];
-                previousChapterIndex = Chapters[i];
+                if (position <= Chapters[i].Position)
+                    return Chapters[i-1];
             }
             return Chapters[Chapters.Count - 1];
         }
+
+        private bool FindChapter(Chapter chapter, int position)
+        {
+            var currChapIndex = Chapters.IndexOf(chapter);
+            return Chapters[currChapIndex + 1].Position - position > chapter.Position;
+        }
+
 
         public event EventHandler ChapterListUpdated;
 

@@ -15,8 +15,8 @@ namespace ChapterListMB
         public Track Track { get; set; }
         private int ShiftAmount { get; } = 250;
         private TimeSpan _shiftMillseconds;
-        private int _repeatIndexA = 0;
-        private int _repeatIndexB = 0;
+        private int _repeatIndexA = -1;
+        private int _repeatIndexB = -1;
 
         public delegate void UpdateTrack(Track track);
         public delegate void UpdateChapterList();
@@ -57,7 +57,7 @@ namespace ChapterListMB
         {
             for (int i = 0; i < chaptersDGV.RowCount; i++)
             {
-                if (i == chapter.ChapterNumber)
+                if (i == chapter.ChapterNumber-1)
                     chaptersDGV.Rows[chapter.ChapterNumber - 1].Cells[0].Value = ">>";
                 else if (i == _repeatIndexA)
                     chaptersDGV.Rows[i].Cells[0].Value = "A";
@@ -172,33 +172,34 @@ namespace ChapterListMB
         }
 
         private void chaptersDGV_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
+        {   // A-B Repeating
             if((e.ColumnIndex == 0) )
             {
-                if((_repeatIndexA == 0) && (_repeatIndexB == 0) && (e.RowIndex != chaptersDGV.RowCount) ) // Can't set A to last chapter
+                if((_repeatIndexA == -1) && (_repeatIndexB == -1) && (e.RowIndex != chaptersDGV.RowCount) ) // Can't set A to last chapter
                 {
-                    if(_repeatIndexA > 0 && _repeatIndexB == 0)
-                    {
-                        _repeatIndexA = 0;
-                        chaptersDGV.Rows[e.RowIndex].Cells[0].Value = string.Empty;
+                    if(_repeatIndexA > -1 && _repeatIndexB == -1)
+                    {   // reset A
+                        _repeatIndexA = -1;
+                        chaptersDGV.Rows[_repeatIndexA].Cells[0].Value = string.Empty;
                     }
                     else
-                    {
+                    {   // Set A
                         _repeatIndexA = e.RowIndex;
-                        chaptersDGV.Rows[e.RowIndex].Cells[0].Value = "A";
+                        chaptersDGV.Rows[_repeatIndexA].Cells[0].Value = "A";
                     }                    
                 }
-                else if ((_repeatIndexB == 0) && (e.RowIndex > _repeatIndexA))
+                else if ((_repeatIndexB == -1) && (e.RowIndex > _repeatIndexA))
                 {
-                    if (_repeatIndexB > 0)
-                    {
-                        _repeatIndexB = 0;
-                        chaptersDGV.Rows[e.RowIndex].Cells[0].Value = string.Empty;
+                    if (_repeatIndexB > -1)
+                    {   // Reset B
+                        _repeatIndexB = -1;
+                        chaptersDGV.Rows[_repeatIndexB].Cells[0].Value = string.Empty;
+                        OnRepeatChaptersRequested(Track.ChapterList.Chapters[_repeatIndexA], null);
                     }
                     else
-                    {
+                    {   // Set B
                         _repeatIndexB = e.RowIndex;
-                        chaptersDGV.Rows[e.RowIndex].Cells[0].Value = "B";
+                        chaptersDGV.Rows[_repeatIndexB].Cells[0].Value = "B";
                     }
                     
                 }
@@ -214,6 +215,10 @@ namespace ChapterListMB
                     var chapterB = Track.ChapterList.Chapters[_repeatIndexB];
                     OnRepeatChaptersRequested(chapterA, chapterB);
                 }                              
+                else
+                {
+                    OnRepeatChaptersRequested(null, null);
+                }
             }
         }
 

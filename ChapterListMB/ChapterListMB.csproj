@@ -60,11 +60,15 @@
     <Compile Include="ChapterListMB.cs" />
     <Compile Include="RepeatChaptersEventArgs.cs" />
     <Compile Include="Track.cs" />
+    <Compile Include="XmlOperations.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
