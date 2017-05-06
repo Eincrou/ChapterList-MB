@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ChapterListMB
 {
-    public class Chapter : IEquatable<Chapter>
+    public class Chapter : IEquatable<Chapter>, IComparable<Chapter>
     {
         /// <summary>
         /// Title of this chapter.
@@ -46,15 +46,35 @@ namespace ChapterListMB
             ChapterNumber = num;
         }
 
-        public bool Equals(Chapter other)
+
+        public override bool Equals(object obj)
         {
-            if (other == null) return false;
-            return (Title == other.Title) && (Position == other.Position);
+            if (obj == null) return false;
+            Chapter ch = obj as Chapter;
+            if ((object)ch == null)
+                return false;
+            return (Title == ch.Title) && (Position == ch.Position);
+        }
+
+        public bool Equals(Chapter ch)
+        {
+            if ((object)ch == null) return false;
+            return (Title == ch.Title) && (Position == ch.Position);
+        }
+
+        public int CompareTo(Chapter other)
+        {
+            return this.Position.CompareTo(other.Position);
         }
 
         public override string ToString()
         {
             return $"{TimeCode} - {Title}";
+        }
+
+        public override int GetHashCode()
+        {
+            return this.ToString().GetHashCode();
         }
     }
 }

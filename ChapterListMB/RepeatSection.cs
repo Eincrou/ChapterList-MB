@@ -12,52 +12,34 @@ namespace ChapterListMB
     /// <summary>
     /// Controls chapter repeating functionality.
     /// </summary>
-    internal class RepeatSection
+    internal static class RepeatSection
     {
-        public bool LoopingEnabled;
-        public Chapter A;
-        public Chapter B;
+        public static bool LoopingEnabled;
+        public static Chapter A;
+        public static Chapter B;
 
-        private Plugin.MusicBeeApiInterface _mbapi;
-        private MainForm _mainForm;
-        private Timer _timer;
-        public RepeatSection(Plugin.MusicBeeApiInterface mbapi, MainForm mainForm, Timer timer)
+        public static void ReceiveChapter(Chapter chapter)
         {
-            _mbapi = mbapi;
-            _mainForm = mainForm;
-            _timer = timer;
-        }
 
-        public void ReceiveChapter(Chapter chapter)
-        {
-            
             if (A == null)
             {
                 A = chapter;
             }
-            else if (A != null)
-            {
-                B = (B == chapter) ? null : chapter;
-            }
-            else
+            else if (A.Equals(chapter))
             {
                 A = null;
+                B = null;
+            }
+            else if (chapter.Position > A.Position)
+            {
+                B = B == null ? chapter : null;
             }
             LoopingEnabled = A != null && B != null;
         }
 
-        public void Loop()
+        public static bool RepeatCheck(int currentPosition)
         {
-            var loopPosition = B.Position;
-            if (A.ChapterNumber == _mainForm.Track.ChapterList.Chapters.Count)  // If A is last chapter, loops from the end of the track.
-            {
-                loopPosition = _mbapi.NowPlaying_GetDuration()-200; // -200ms so timer can catch it before track ends.
-                LoopingEnabled = true;
-            }
-            if (LoopingEnabled && _mbapi.Player_GetPosition() >= loopPosition)
-            {
-                _mbapi.Player_SetPosition(A.Position);
-            }
+            return LoopingEnabled && currentPosition > B.Position;
         }
     }
 }

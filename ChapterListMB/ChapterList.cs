@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,12 +7,21 @@ using System.Threading.Tasks;
 
 namespace ChapterListMB
 {
-    public class ChapterList
+    public class ChapterList : IEnumerable<Chapter>
     {
         /// <summary>
         /// Gets the list of all chapters in this ChapterList.
         /// </summary>
-        public List<Chapter> Chapters { get; private set; } = new List<Chapter>();
+        public List<Chapter> Chapters { get; } = new List<Chapter>();
+
+        public Chapter this[int index]
+        {
+            get { return Chapters[index]; }
+            set
+            {
+                Chapters.Insert(index, value);
+            }
+        }
         /// <summary>
         /// Gets the total number of chapters in this ChapterList.
         /// </summary>
@@ -62,16 +72,18 @@ namespace ChapterListMB
         }
         private void SortChapters()
         {
-            var reorderedChapters = from chapter in Chapters
-                                    orderby chapter.Position ascending
-                                    select chapter;
+            //var reorderedChapters = from chapter in Chapters
+            //                        orderby chapter.Position ascending
+            //                        select chapter;
+            Chapters.Sort();
             var chapterNumber = 1;
-            foreach (var chapter in reorderedChapters)
+            foreach (var chapter in Chapters)
             {
                 chapter.SetChapterNumber(chapterNumber);
                 chapterNumber++;
             }
-            Chapters = reorderedChapters.ToList();
+            //Chapters = reorderedChapters.ToList();
+
             OnChapterListUpdated();
         }
 
@@ -124,6 +136,16 @@ namespace ChapterListMB
         protected virtual void OnChapterListUpdated()
         {
             ChapterListUpdated?.Invoke(this, EventArgs.Empty);
+        }
+
+        public IEnumerator<Chapter> GetEnumerator()
+        {
+            return Chapters.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return Chapters.GetEnumerator();
         }
     }
 }

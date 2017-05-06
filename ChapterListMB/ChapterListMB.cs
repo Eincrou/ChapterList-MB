@@ -18,8 +18,6 @@ namespace MusicBeePlugin
         private Track _track;
         private Timer _timer;
         private Chapter _currentChapter;
-        private Chapter _repeatChapterA;
-        private Chapter _repeatChapterB;
 
         public PluginInfo Initialise(IntPtr apiInterfacePtr)
         {
@@ -135,7 +133,7 @@ namespace MusicBeePlugin
 
         private void _timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            if (_track.ChapterList.Chapters.Count == 0) return;
+            if (_track.ChapterList.NumChapters == 0) return;
             var playerPosition = mbApiInterface.Player_GetPosition();
             var currentChapter = _track.ChapterList.GetCurrentChapterFromPosition(playerPosition);
             if (_currentChapter?.ChapterNumber != currentChapter.ChapterNumber)
@@ -143,12 +141,10 @@ namespace MusicBeePlugin
                 _mainForm.Invoke(_mainForm.SetCurrentChapterDelegate, currentChapter);
                 _currentChapter = currentChapter;
             }
-            if ((_repeatChapterA != null) && (_repeatChapterB != null)) // Repeat chapters
+            // Repeat section
+            if (RepeatSection.RepeatCheck(playerPosition))
             {
-                if (playerPosition >= _repeatChapterB.Position)
-                {
-                    mbApiInterface.Player_SetPosition(_repeatChapterA.Position);
-                }
+                mbApiInterface.Player_SetPosition(RepeatSection.A.Position);
             }
         }
 
@@ -204,34 +200,29 @@ namespace MusicBeePlugin
             if (mbApiInterface.Player_GetPlayState() != PlayState.Undefined)
             {
                 _track = GetTrack();
-                if (_track.ChapterList.Chapters == null) return;
                 _mainForm.Invoke(_mainForm.UpdateTrackDelegate, _track);
+                if (_track.ChapterList.NumChapters == 0) return;
                 if (mbApiInterface.Player_GetPlayState() == PlayState.Playing)
                 {
-                    _currentChapter = _track.ChapterList.Chapters.First();
+                    _currentChapter = _track.ChapterList[0];
+                    _mainForm.Invoke(_mainForm.SetCurrentChapterDelegate, _currentChapter);
                     _timer.Start();
                 }
             }
         }
-        
 
 
+        /* * * * * *
+         *  Events *
+         * * * * * */
         private void SubscribeToEvents()
         {
             _mainForm.SelectedItemDoubleClickedRouted += MainFormOnSelectedItemDoubleClickedRouted;
             _mainForm.AddChapterButtonClickedRouted += MainFormOnAddChapterButtonClickedRouted;
             _mainForm.RemoveChapterButtonClickedRouted += MainFormOnRemoveChapterButtonClickedRouted;
             _mainForm.ChangeChapterRequested += MainFormOnChangeChapterRequested;
-            _mainForm.RepeatChaptersRequested += MainFormRepeatChaptersRequested;
         }
-
-        private void MainFormRepeatChaptersRequested(object sender, RepeatChaptersEventArgs e)
-        {
-            _repeatChapterA = e.ChapterA;
-            _repeatChapterB = e.ChapterB;
-
-        }
-
+        
         private void MainFormOnSelectedItemDoubleClickedRouted(object sender, Chapter chapter)
         {
             mbApiInterface.Player_SetPosition(chapter.Position);
