@@ -4,11 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using System.Xml.Linq;
 
 namespace ChapterListMB
 {
-    class XmlOperations
+    internal static class XmlOperations
     {
         public static void SaveChapterListToXml(ChapterList chapList)
         {
@@ -31,9 +32,12 @@ namespace ChapterListMB
         {
             try
             {
-                if (!System.IO.File.Exists(Track.XmlPath.LocalPath)) { throw new FileNotFoundException(); }
+                if (!System.IO.File.Exists(Track.XmlPath.LocalPath))
+                {
+                    throw new FileNotFoundException();
+                }
                 var chaptersListDoc = XDocument.Load(Track.XmlPath.LocalPath);
-                if (chaptersListDoc.Root.Attribute("version").Value == "1.0")   // 1.0 is original chapterlist XML format
+                if (chaptersListDoc.Root.Attribute("version").Value == "1.0") // 1.0 is original chapterlist XML format
                 {
                     foreach (var xElement in chaptersListDoc.Descendants("Chapter"))
                     {
@@ -41,6 +45,10 @@ namespace ChapterListMB
                             int.Parse(xElement.Attribute("pos").Value));
                     }
                 }
+            }
+            catch (FileNotFoundException)
+            {
+                // ignored
             }
             catch (Exception)
             {

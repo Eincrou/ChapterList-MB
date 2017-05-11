@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ChapterListMB
 {
-    public class NowPlayingTrackInfo
+    public struct NowPlayingTrackInfo : IEquatable<NowPlayingTrackInfo>
     {
         public string Title { get; set; }
         public string Artist { get; set; }
@@ -28,6 +28,28 @@ namespace ChapterListMB
             Album = album;
             Duration = duration;
             FilePath = filepath;
+        }
+
+        public bool Equals(NowPlayingTrackInfo other)
+        {
+            return this.ToString().Equals(other.ToString());
+        }
+
+        public override string ToString()
+        {
+            return $"{Artist} - {Album} - {Title} ({Duration:g}) | {FilePath}";
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null) return false;
+            if (!(obj is NowPlayingTrackInfo)) return false;
+            return ToString().Equals(obj?.ToString());
+        }
+
+        public override int GetHashCode()
+        {
+            return ToString().GetHashCode();
         }
     }
 }

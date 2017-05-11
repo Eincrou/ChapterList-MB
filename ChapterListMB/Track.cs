@@ -8,7 +8,7 @@ using MusicBeePlugin;
 
 namespace ChapterListMB
 {
-    public class Track
+    public class Track : IEquatable<Track>
     {
 
         public ChapterList ChapterList { get; private set; }
@@ -25,6 +25,30 @@ namespace ChapterListMB
         private void ChapterList_ChapterListUpdated(object sender, EventArgs e)
         {
             ChapterList.SaveChaptersToFile();
+        }
+        public override string ToString()
+        {
+            return $"{NowPlayingTrackInfo.Artist} - {NowPlayingTrackInfo.Album} - {NowPlayingTrackInfo.Title}";
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null) return false;
+            Track track  = obj as Track;
+            if ((object) track == null)
+                return false;
+            return ChapterList.Equals(track.ChapterList) && 
+                NowPlayingTrackInfo.Equals(track.NowPlayingTrackInfo);
+        }
+        public bool Equals(Track other)
+        {
+            if ((object) other == null) return false;
+                return ChapterList.Equals(other.ChapterList) &&
+                NowPlayingTrackInfo.Equals(other.NowPlayingTrackInfo);
+        }
+        public override int GetHashCode()
+        {
+            return ToString().GetHashCode();
         }
     }
 }

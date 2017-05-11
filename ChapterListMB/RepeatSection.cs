@@ -41,5 +41,11 @@ namespace ChapterListMB
         {
             return LoopingEnabled && currentPosition > B.Position;
         }
+
+        public static void Clear()
+        {
+            A = null;
+            B = null;
+        }
     }
 }

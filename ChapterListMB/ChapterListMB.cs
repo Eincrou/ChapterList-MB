@@ -95,7 +95,6 @@ namespace MusicBeePlugin
                     switch (mbApiInterface.Player_GetPlayState())
                     {
                         case PlayState.Playing:
-                            //_currentChapter = _track.ChapterList.Chapters?.First();
                             _timer.Start();
                             break;
                     }
@@ -107,11 +106,10 @@ namespace MusicBeePlugin
                     break;
                 case NotificationType.TrackChanging:
                     if (!_timer.Enabled) _timer.Stop();
-                    //_currentChapter = _track.ChapterList.Chapters?.First();
+                    RepeatSection.Clear();
                     break;
                 case NotificationType.PlayStateChanged:
                     if (_track == null) return;
-                    //_currentChapter = _track.ChapterList.Chapters?.First();
                     switch (mbApiInterface.Player_GetPlayState())
                     {
                         case PlayState.Playing:
@@ -134,9 +132,9 @@ namespace MusicBeePlugin
         private void _timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             if (_track.ChapterList.NumChapters == 0) return;
-            var playerPosition = mbApiInterface.Player_GetPosition();
-            var currentChapter = _track.ChapterList.GetCurrentChapterFromPosition(playerPosition);
-            if (_currentChapter?.ChapterNumber != currentChapter.ChapterNumber)
+            int playerPosition = mbApiInterface.Player_GetPosition();
+            Chapter currentChapter = _track.ChapterList.GetCurrentChapterFromPosition(playerPosition);
+            if (!currentChapter.Equals(_currentChapter))
             {
                 _mainForm.Invoke(_mainForm.SetCurrentChapterDelegate, currentChapter);
                 _currentChapter = currentChapter;
@@ -159,32 +157,8 @@ namespace MusicBeePlugin
                 new Uri(mbApiInterface.NowPlaying_GetFileProperty(
                     FilePropertyType.Url), UriKind.Absolute)
             );
-            var track = new Track(trackInfo);
+            Track track = new Track(trackInfo);
             return track;
-        }
-
-        // return an array of lyric or artwork provider names this plugin supports
-        // the providers will be iterated through one by one and passed to the RetrieveLyrics/ RetrieveArtwork function in order set by the user in the MusicBee Tags(2) preferences screen until a match is found
-        public string[] GetProviders()
-        {
-            return null;
-        }
-
-        // return lyrics for the requested artist/title from the requested provider
-        // only required if PluginType = LyricsRetrieval
-        // return null if no lyrics are found
-        public string RetrieveLyrics(string sourceFileUrl, string artist, string trackTitle, string album, bool synchronisedPreferred, string provider)
-        {
-            return null;
-        }
-
-        // return Base64 string representation of the artwork binary data from the requested provider
-        // only required if PluginType = ArtworkRetrieval
-        // return null if no artwork is found
-        public string RetrieveArtwork(string sourceFileUrl, string albumArtist, string album, string provider)
-        {
-            //Return Convert.ToBase64String(artworkBinaryData)
-            return null;
         }
 
         private void CreateMenuItem()
@@ -195,6 +169,7 @@ namespace MusicBeePlugin
         private void OnMenuClicked(object sender, EventArgs args)
         {
             _mainForm = new MainForm();
+            //mbApiInterface.MB_AddPanel(_mainForm.DataGridView, PluginPanelDock.ApplicationWindow);
             _mainForm.Show();
             SubscribeToEvents();
             if (mbApiInterface.Player_GetPlayState() != PlayState.Undefined)
@@ -231,7 +206,7 @@ namespace MusicBeePlugin
         {
             var currentPosition = mbApiInterface.Player_GetPosition();
             _track.ChapterList.CreateNewChapter(currentPosition);
-            _mainForm.Invoke(_mainForm.UpdateTrackDelegate, _track);
+            //_mainForm.Invoke(_mainForm.UpdateTrackDelegate, _track);
         }
         private void MainFormOnRemoveChapterButtonClickedRouted(object sender, Chapter e)
         {
@@ -241,7 +216,7 @@ namespace MusicBeePlugin
         private void MainFormOnChangeChapterRequested(object sender, ChapterChangeEventArgs e)
         {
             _track.ChapterList.ChangeChapter(e.ChapterToChange, new Chapter(e.Position, e.Title));
-           _mainForm.Invoke(_mainForm.UpdateTrackDelegate, _track);
+           //_mainForm.Invoke(_mainForm.UpdateTrackDelegate, _track);
         }
         
     }
