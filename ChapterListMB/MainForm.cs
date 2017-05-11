@@ -17,7 +17,8 @@ namespace ChapterListMB
         private const int ShiftAmount = 250;
         private TimeSpan _shiftMillseconds;
         private readonly BindingSource _chapterListBindingSource = new BindingSource();
-        private readonly DataGridViewCellStyle _defaultCellStyle;
+        private  DataGridViewCellStyle _defaultCellStyleA;
+        private  DataGridViewCellStyle _defaultCellStyleB;
         //public DataGridView DataGridView => chaptersDGV;
 
         public delegate void UpdateTrack(Track track);
@@ -33,11 +34,10 @@ namespace ChapterListMB
             _shiftMillseconds = new TimeSpan(0, 0, 0, 0, ShiftAmount);
 
             chaptersDGV.DataSource = _chapterListBindingSource;
-            //chaptersDGV.Columns[1].DataPropertyName = "TimeCode";
-            //chaptersDGV.Columns[2].DataPropertyName = "Title";
             chaptersDGV.AutoGenerateColumns = false;
-            _defaultCellStyle = chaptersDGV.DefaultCellStyle;
-            
+            _defaultCellStyleA = chaptersDGV.DefaultCellStyle;
+            _defaultCellStyleB = chaptersDGV.AlternatingRowsDefaultCellStyle;
+
             UpdateTrackDelegate = UpdateTrackMethod;
             UpdateChapterListDelegate = UpdateFirstColumn;
             SetCurrentChapterDelegate = SetCurrentChapterMethod;
@@ -79,12 +79,22 @@ namespace ChapterListMB
         {
             CurrentChapter = chapter;
             chaptersCountStatusLabel.Text = $"{CurrentChapter.ChapterNumber}/{Track.ChapterList.NumChapters} – {CurrentChapter.Title}";
+
             foreach (var dgvRow in chaptersDGV.Rows)
             {
                 DataGridViewRow row = (DataGridViewRow) dgvRow;
-                row.DefaultCellStyle = _defaultCellStyle;
+                row.DefaultCellStyle = (row.Index % 2) == 0 ? _defaultCellStyleA : _defaultCellStyleB;
+                row.Cells[2].Style = (row.Index % 2) == 0 ? _defaultCellStyleA : _defaultCellStyleB;
             }
-            chaptersDGV.Rows[CurrentChapter.ChapterNumber - 1].DefaultCellStyle = new DataGridViewCellStyle {BackColor = Color.PaleGreen, SelectionBackColor = Color.Green};
+            var selectedStyle = new DataGridViewCellStyle
+            {
+                BackColor = Color.PaleGreen,
+                SelectionBackColor = Color.Green
+            };
+            chaptersDGV.Rows[CurrentChapter.ChapterNumber - 1].DefaultCellStyle = selectedStyle;
+            var boldStyle = new DataGridViewCellStyle(selectedStyle);
+            boldStyle.Font = new Font(FontFamily.GenericSansSerif, 8.25f, FontStyle.Bold);
+            chaptersDGV.Rows[CurrentChapter.ChapterNumber - 1].Cells[2].Style = boldStyle;
             UpdateFirstColumn();
         }
         private Chapter GetSelectedDGVChapter()
