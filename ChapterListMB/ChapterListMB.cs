@@ -101,12 +101,12 @@ namespace MusicBeePlugin
                     break;
                 case NotificationType.TrackChanged:
                     if (_mainForm == null) return;
+                    RepeatSection.Clear();
                     _track = GetTrack();
                     _mainForm.Invoke(_mainForm.UpdateTrackDelegate, _track);
                     break;
                 case NotificationType.TrackChanging:
                     if (!_timer.Enabled) _timer.Stop();
-                    RepeatSection.Clear();
                     break;
                 case NotificationType.PlayStateChanged:
                     if (_track == null) return;
@@ -206,7 +206,6 @@ namespace MusicBeePlugin
         {
             var currentPosition = mbApiInterface.Player_GetPosition();
             _track.ChapterList.CreateNewChapter(currentPosition);
-            //_mainForm.Invoke(_mainForm.UpdateTrackDelegate, _track);
         }
         private void MainFormOnRemoveChapterButtonClickedRouted(object sender, Chapter e)
         {

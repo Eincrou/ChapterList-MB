@@ -16,11 +16,11 @@ namespace ChapterListMB
         private Chapter CurrentChapter { get; set; }
         private const int ShiftAmount = 250;
         private TimeSpan _shiftMillseconds;
-        private readonly BindingSource _chapterListBindingSource = new BindingSource();
-        private  DataGridViewCellStyle _defaultCellStyleA;
-        private  DataGridViewCellStyle _defaultCellStyleB;
-        //public DataGridView DataGridView => chaptersDGV;
 
+        private readonly BindingSource _chapterListBindingSource = new BindingSource();
+        private readonly DataGridViewCellStyle _defaultCellStyleA;
+        private readonly DataGridViewCellStyle _defaultCellStyleB;
+        
         public delegate void UpdateTrack(Track track);
         public delegate void UpdateChapterList();
         public delegate void SetCurrentChapter(Chapter chapter);
@@ -92,6 +92,7 @@ namespace ChapterListMB
                 SelectionBackColor = Color.Green
             };
             chaptersDGV.Rows[CurrentChapter.ChapterNumber - 1].DefaultCellStyle = selectedStyle;
+
             var boldStyle = new DataGridViewCellStyle(selectedStyle);
             boldStyle.Font = new Font(FontFamily.GenericSansSerif, 8.25f, FontStyle.Bold);
             chaptersDGV.Rows[CurrentChapter.ChapterNumber - 1].Cells[2].Style = boldStyle;

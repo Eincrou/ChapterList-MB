@@ -44,6 +44,7 @@ namespace ChapterListMB
 
         public static void Clear()
         {
+            LoopingEnabled = false;
             A = null;
             B = null;
         }
