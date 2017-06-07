@@ -38,11 +38,12 @@ namespace ChapterListMB
         /// <summary>
         /// Creates and adds a new chapter to the list, based on specified parameters.
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="position"></param>
+        /// <param name="name">Title of the new chapter</param>
+        /// <param name="position">Position in milliseconds of the new chapter</param>
         public void CreateNewChapter(string name, int position)
         {
-            Chapters.Add(new Chapter(position, name));
+            Chapters.Add(string.IsNullOrWhiteSpace(name) ? new Chapter(position) : new Chapter(position, name));
+            CheckForZeroPositionChapter();
             SortChapters();
             OnChapterListUpdated();
         }
@@ -52,11 +53,16 @@ namespace ChapterListMB
         /// <param name="position"></param>
         public void CreateNewChapter(int position)
         {
-            if((Chapters.Count == 0) || (Chapters.First().Position != 0))
-                Chapters.Add(new Chapter(0, "Start of first chapter"));
             Chapters.Add(new Chapter(position));
+            CheckForZeroPositionChapter();
             SortChapters();
             OnChapterListUpdated();
+        }
+
+        private void CheckForZeroPositionChapter()
+        {
+            if ((Chapters.Count == 0) || (Chapters.First().Position != 0))
+                Chapters.Add(new Chapter(0, "Start of first chapter"));
         }
         public void RemoveChapter(Chapter chapterToRemove)
         {

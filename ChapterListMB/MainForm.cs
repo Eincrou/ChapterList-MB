@@ -14,8 +14,6 @@ namespace ChapterListMB
     {
         private Track Track { get; set; }
         private Chapter CurrentChapter { get; set; }
-        private const int ShiftAmount = 250;
-        private TimeSpan _shiftMillseconds;
 
         private readonly BindingSource _chapterListBindingSource = new BindingSource();
         private readonly DataGridViewCellStyle _defaultCellStyleA;
@@ -31,12 +29,12 @@ namespace ChapterListMB
         public MainForm()
         {
             InitializeComponent();
-            _shiftMillseconds = new TimeSpan(0, 0, 0, 0, ShiftAmount);
 
             chaptersDGV.DataSource = _chapterListBindingSource;
             chaptersDGV.AutoGenerateColumns = false;
             _defaultCellStyleA = chaptersDGV.DefaultCellStyle;
             _defaultCellStyleB = chaptersDGV.AlternatingRowsDefaultCellStyle;
+            comboBoxNewChapterName.SelectedIndex = 0;
 
             UpdateTrackDelegate = UpdateTrackMethod;
             UpdateChapterListDelegate = UpdateFirstColumn;
@@ -88,8 +86,8 @@ namespace ChapterListMB
             }
             var selectedStyle = new DataGridViewCellStyle
             {
-                BackColor = Color.PaleGreen,
-                SelectionBackColor = Color.Green
+                BackColor = Properties.Settings.Default.HighlightColor,
+                SelectionBackColor = Properties.Settings.Default.HighlightBackgroundColor
             };
             chaptersDGV.Rows[CurrentChapter.ChapterNumber - 1].DefaultCellStyle = selectedStyle;
 
@@ -103,7 +101,7 @@ namespace ChapterListMB
             var firstRow = chaptersDGV.Rows[0];
             if (chaptersDGV.SelectedRows.Contains(firstRow))
             {
-                MessageBox.Show("Cannot remove first chapter.");
+                MessageBox.Show("Cannot remove or change position of first chapter.");
                 return null;
             }
             if (chaptersDGV.SelectedRows.Count == 0 || chaptersDGV.SelectedRows.Count > 1)
@@ -115,14 +113,16 @@ namespace ChapterListMB
         }
         private void addChapterButton_Click(object sender, EventArgs e)
         {
-            OnAddChapterButtonClickedRouted(e);
+            string newChapterName = comboBoxNewChapterName.Text == "<Default>"
+                ? string.Empty
+                : comboBoxNewChapterName.Text;
+            OnAddChapterButtonClickedRouted(newChapterName);
         }
         
         private void removeChapterButton_Click(object sender, EventArgs e)
         {
             var chapterToRemove = GetSelectedDGVChapter();
             if (chapterToRemove != null)
-                //_chapterListBindingSource.RemoveCurrent();
                 OnRemoveChapterButtonClickedRouted(chapterToRemove);
         }
         private void shiftPositionBackButton_Click(object sender, EventArgs e)
@@ -132,7 +132,11 @@ namespace ChapterListMB
             {
                 return;
             }
-            int? newPosition = chapterToShiftBack.Position - _shiftMillseconds.Milliseconds;
+
+            int? newPosition = chapterToShiftBack.Position -
+                               (ModifierKeys == Keys.Shift
+                                   ? (int) Properties.Settings.Default.ChapterPositionShiftValue.TotalMilliseconds*4
+                                   : (int) Properties.Settings.Default.ChapterPositionShiftValue.TotalMilliseconds);
             if (newPosition < 1) newPosition = 1;
             OnChangeChapterRequested(chapterToShiftBack, null, newPosition);
             chaptersDGV.UpdateCellValue(1, chapterToShiftBack.ChapterNumber - 1);
@@ -144,7 +148,10 @@ namespace ChapterListMB
             {
                 return;
             }
-            int? newPosition = chapterToShiftForwards.Position + _shiftMillseconds.Milliseconds;
+            int? newPosition = chapterToShiftForwards.Position +
+                               (ModifierKeys == Keys.Shift
+                                   ? (int) Properties.Settings.Default.ChapterPositionShiftValue.TotalMilliseconds*4
+                                   : (int) Properties.Settings.Default.ChapterPositionShiftValue.TotalMilliseconds);
             if (newPosition > Track.NowPlayingTrackInfo.Duration.TotalMilliseconds)
                 newPosition = (int)Track.NowPlayingTrackInfo.Duration.TotalMilliseconds;
             OnChangeChapterRequested(chapterToShiftForwards, null, newPosition);
@@ -162,12 +169,6 @@ namespace ChapterListMB
         private void chaptersDGV_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {   // Changes chapter title
             Track.ChapterList.SaveChaptersToFile();
-            //var chapterToChangeTitle = (Chapter)chaptersDGV.Rows[e.RowIndex].DataBoundItem;
-            //var newChapterTitle = (string) chaptersDGV.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
-            //if (chapterToChangeTitle.Title != newChapterTitle)
-            //{
-            //    OnChangeChapterRequested(chapterToChangeTitle, newChapterTitle, null);
-            //}
         }
 
         
@@ -177,10 +178,10 @@ namespace ChapterListMB
             SelectedItemDoubleClickedRouted?.Invoke(this, e);
         }
 
-        public event EventHandler AddChapterButtonClickedRouted;
-        protected virtual void OnAddChapterButtonClickedRouted(EventArgs e)
+        public event EventHandler<string> AddChapterButtonClickedRouted;
+        protected virtual void OnAddChapterButtonClickedRouted(string newChapterName)
         {
-            AddChapterButtonClickedRouted?.Invoke(this, e);
+            AddChapterButtonClickedRouted?.Invoke(this, newChapterName);
             _chapterListBindingSource.ResetBindings(false);
         }
 
@@ -204,6 +205,8 @@ namespace ChapterListMB
             if((e.ColumnIndex == 0) )
             {
                 RepeatSection.ReceiveChapter((Chapter)chaptersDGV.Rows[e.RowIndex].DataBoundItem);
+                if(RepeatSection.TrackDuration == TimeSpan.Zero)
+                    RepeatSection.TrackDuration = Track.NowPlayingTrackInfo.Duration;
                 UpdateFirstColumn();
             }
         }

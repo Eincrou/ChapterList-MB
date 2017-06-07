@@ -17,6 +17,7 @@ namespace ChapterListMB
         public static bool LoopingEnabled;
         public static Chapter A;
         public static Chapter B;
+        public static TimeSpan TrackDuration;
 
         public static void ReceiveChapter(Chapter chapter)
         {
@@ -34,12 +35,14 @@ namespace ChapterListMB
             {
                 B = B == null ? chapter : null;
             }
-            LoopingEnabled = A != null && B != null;
+            //LoopingEnabled = A != null && B != null;
+            LoopingEnabled = A != null;
         }
 
         public static bool RepeatCheck(int currentPosition)
         {
-            return LoopingEnabled && currentPosition > B.Position;
+            return LoopingEnabled && (currentPosition > B?.Position ||
+                currentPosition > TrackDuration.TotalMilliseconds - 200);
         }
 
         public static void Clear()
@@ -47,6 +50,7 @@ namespace ChapterListMB
             LoopingEnabled = false;
             A = null;
             B = null;
+            TrackDuration = TimeSpan.Zero;
         }
     }
 }

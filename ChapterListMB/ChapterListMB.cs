@@ -89,7 +89,7 @@ namespace MusicBeePlugin
             {
                 case NotificationType.PluginStartup:
                     // perform startup initialisation
-                    //if (_mainForm != null) return;
+                    
                     _timer = new Timer(100);
                     _timer.Elapsed += _timer_Elapsed;
                     switch (mbApiInterface.Player_GetPlayState())
@@ -98,10 +98,13 @@ namespace MusicBeePlugin
                             _timer.Start();
                             break;
                     }
+                    //if (ChapterListMB.Properties.Settings.Default.StartWithMusicBee)
+                    //    OnMenuClicked(null, null);
                     break;
                 case NotificationType.TrackChanged:
                     if (_mainForm == null) return;
                     RepeatSection.Clear();
+                    _currentChapter = null;
                     _track = GetTrack();
                     _mainForm.Invoke(_mainForm.UpdateTrackDelegate, _track);
                     break;
@@ -202,10 +205,12 @@ namespace MusicBeePlugin
         {
             mbApiInterface.Player_SetPosition(chapter.Position);
         }
-        private void MainFormOnAddChapterButtonClickedRouted(object sender, EventArgs e)
+        private void MainFormOnAddChapterButtonClickedRouted(object sender, string newChapterName)
         {
             var currentPosition = mbApiInterface.Player_GetPosition();
-            _track.ChapterList.CreateNewChapter(currentPosition);
+            _track.ChapterList.CreateNewChapter(newChapterName, currentPosition);
+            if (!_timer.Enabled)
+                _timer.Enabled = true;
         }
         private void MainFormOnRemoveChapterButtonClickedRouted(object sender, Chapter e)
         {
@@ -214,8 +219,11 @@ namespace MusicBeePlugin
         }
         private void MainFormOnChangeChapterRequested(object sender, ChapterChangeEventArgs e)
         {
+            if (e.ChapterToChange.Position != e.Position)
+            {
+                mbApiInterface.Player_SetPosition(e.Position);
+            }
             _track.ChapterList.ChangeChapter(e.ChapterToChange, new Chapter(e.Position, e.Title));
-           //_mainForm.Invoke(_mainForm.UpdateTrackDelegate, _track);
         }
         
     }
