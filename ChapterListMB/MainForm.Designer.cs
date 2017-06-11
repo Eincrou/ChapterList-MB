@@ -35,7 +35,7 @@
             this.shiftPositionBackButton = new System.Windows.Forms.Button();
             this.shiftPositionFwdButton = new System.Windows.Forms.Button();
             this.chaptersDGV = new System.Windows.Forms.DataGridView();
-            this.Icon = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ChapterStatus = new System.Windows.Forms.DataGridViewImageColumn();
             this.positionCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.titleCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
@@ -43,6 +43,7 @@
             this.chaptersCountStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.comboBoxNewChapterName = new System.Windows.Forms.ComboBox();
+            this.lblNewChapt = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.chaptersDGV)).BeginInit();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -79,8 +80,6 @@
             this.shiftPositionBackButton.Size = new System.Drawing.Size(40, 35);
             this.shiftPositionBackButton.TabIndex = 5;
             this.shiftPositionBackButton.Text = "<<";
-            this.toolTip1.SetToolTip(this.shiftPositionBackButton, string.Format("Adjust the position of selected chapter backwards by {0}ms.\n(Hold Shift to adjust by 4x.)",
-                Properties.Settings.Default.ChapterPositionShiftValue.TotalMilliseconds));
             this.shiftPositionBackButton.UseVisualStyleBackColor = true;
             this.shiftPositionBackButton.Click += new System.EventHandler(this.shiftPositionBackButton_Click);
             // 
@@ -92,8 +91,6 @@
             this.shiftPositionFwdButton.Size = new System.Drawing.Size(40, 35);
             this.shiftPositionFwdButton.TabIndex = 6;
             this.shiftPositionFwdButton.Text = ">>";
-            this.toolTip1.SetToolTip(this.shiftPositionFwdButton, string.Format("Adjust the position of selected chapter forwards by {0}ms.\n(Hold Shift to adjust by 4x.)",
-                Properties.Settings.Default.ChapterPositionShiftValue.TotalMilliseconds));
             this.shiftPositionFwdButton.UseVisualStyleBackColor = true;
             this.shiftPositionFwdButton.Click += new System.EventHandler(this.shiftPositionFwdButton_Click);
             // 
@@ -113,7 +110,7 @@
             this.chaptersDGV.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
             this.chaptersDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.chaptersDGV.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Icon,
+            this.ChapterStatus,
             this.positionCol,
             this.titleCol});
             this.chaptersDGV.Location = new System.Drawing.Point(12, 12);
@@ -126,19 +123,18 @@
             this.chaptersDGV.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.chaptersDGV.Size = new System.Drawing.Size(285, 268);
             this.chaptersDGV.TabIndex = 7;
-            this.chaptersDGV.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.chaptersDGV_CellClick);
+            this.chaptersDGV.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.OnChaptersDgvCellClick);
             this.chaptersDGV.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.chaptersDGV_CellEndEdit);
             this.chaptersDGV.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.chaptersDGV_CellMouseDoubleClick);
+            this.chaptersDGV.SelectionChanged += new System.EventHandler(this.OnChaptersDgvSelectionChanged);
             // 
-            // Icon
+            // ChapterStatus
             // 
-            this.Icon.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.Icon.HeaderText = "";
-            this.Icon.Name = "Icon";
-            this.Icon.ReadOnly = true;
-            this.Icon.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.Icon.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Icon.Width = 30;
+            this.ChapterStatus.HeaderText = "";
+            this.ChapterStatus.Name = "ChapterStatus";
+            this.ChapterStatus.ReadOnly = true;
+            this.ChapterStatus.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.ChapterStatus.Width = 30;
             // 
             // positionCol
             // 
@@ -198,16 +194,28 @@
             "Bridge",
             "Solo",
             "Outro"});
-            this.comboBoxNewChapterName.Location = new System.Drawing.Point(120, 302);
+            this.comboBoxNewChapterName.Location = new System.Drawing.Point(120, 308);
             this.comboBoxNewChapterName.Name = "comboBoxNewChapterName";
             this.comboBoxNewChapterName.Size = new System.Drawing.Size(85, 21);
             this.comboBoxNewChapterName.TabIndex = 9;
+            // 
+            // lblNewChapt
+            // 
+            this.lblNewChapt.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.lblNewChapt.AutoSize = true;
+            this.lblNewChapt.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblNewChapt.Location = new System.Drawing.Point(116, 288);
+            this.lblNewChapt.Name = "lblNewChapt";
+            this.lblNewChapt.Size = new System.Drawing.Size(92, 13);
+            this.lblNewChapt.TabIndex = 10;
+            this.lblNewChapt.Text = "New Chapter Title";
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(309, 361);
+            this.Controls.Add(this.lblNewChapt);
             this.Controls.Add(this.comboBoxNewChapterName);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.chaptersDGV);
@@ -237,9 +245,10 @@
         private System.Windows.Forms.ToolStripStatusLabel titleArtistStatusLabel;
         private System.Windows.Forms.ToolStripStatusLabel chaptersCountStatusLabel;
         private System.Windows.Forms.ToolTip toolTip1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Icon;
+        private System.Windows.Forms.ComboBox comboBoxNewChapterName;
+        private System.Windows.Forms.DataGridViewImageColumn ChapterStatus;
         private System.Windows.Forms.DataGridViewTextBoxColumn positionCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn titleCol;
-        private System.Windows.Forms.ComboBox comboBoxNewChapterName;
+        private System.Windows.Forms.Label lblNewChapt;
     }
 }

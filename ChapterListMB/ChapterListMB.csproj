@@ -80,6 +80,14 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\activechapter-black.png" />
+    <EmbeddedResource Include="Resources\activechapter-gray.png" />
+    <EmbeddedResource Include="Resources\activechapter-white.png" />
+    <EmbeddedResource Include="Resources\replaychapter-black.png" />
+    <EmbeddedResource Include="Resources\replaychapter-gray.png" />
+    <EmbeddedResource Include="Resources\replaychapter-white.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy /Y "$(TargetDir)\*.*" "C:\Program Files (x86)\MusicBee\Plugins\"</PostBuildEvent>

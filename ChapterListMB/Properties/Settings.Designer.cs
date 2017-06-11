@@ -49,7 +49,7 @@ namespace ChapterListMB.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("00:00:00.1000000")]
+        [global::System.Configuration.DefaultSettingValueAttribute("00:00:00.2000000")]
         public global::System.TimeSpan ChapterPositionShiftValue {
             get {
                 return ((global::System.TimeSpan)(this["ChapterPositionShiftValue"]));
@@ -61,7 +61,7 @@ namespace ChapterListMB.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool StartWithMusicBee {
             get {
                 return ((bool)(this["StartWithMusicBee"]));

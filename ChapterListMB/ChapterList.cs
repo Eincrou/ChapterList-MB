@@ -78,9 +78,6 @@ namespace ChapterListMB
         }
         private void SortChapters()
         {
-            //var reorderedChapters = from chapter in Chapters
-            //                        orderby chapter.Position ascending
-            //                        select chapter;
             Chapters.Sort();
             var chapterNumber = 1;
             foreach (var chapter in Chapters)
@@ -88,8 +85,6 @@ namespace ChapterListMB
                 chapter.SetChapterNumber(chapterNumber);
                 chapterNumber++;
             }
-            //Chapters = reorderedChapters.ToList();
-
             OnChapterListUpdated();
         }
 

@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Media.Imaging;
 
 namespace ChapterListMB
 {
@@ -16,8 +20,8 @@ namespace ChapterListMB
         private Chapter CurrentChapter { get; set; }
 
         private readonly BindingSource _chapterListBindingSource = new BindingSource();
-        private readonly DataGridViewCellStyle _defaultCellStyleA;
-        private readonly DataGridViewCellStyle _defaultCellStyleB;
+        private readonly DataGridViewCellStyle _defaultCellStyleA;  // White row style
+        private readonly DataGridViewCellStyle _defaultCellStyleB;  // Tan row style
         
         public delegate void UpdateTrack(Track track);
         public delegate void UpdateChapterList();
@@ -32,8 +36,10 @@ namespace ChapterListMB
 
             chaptersDGV.DataSource = _chapterListBindingSource;
             chaptersDGV.AutoGenerateColumns = false;
+            // Copy default cell styles
             _defaultCellStyleA = chaptersDGV.DefaultCellStyle;
             _defaultCellStyleB = chaptersDGV.AlternatingRowsDefaultCellStyle;
+
             comboBoxNewChapterName.SelectedIndex = 0;
 
             UpdateTrackDelegate = UpdateTrackMethod;
@@ -45,7 +51,9 @@ namespace ChapterListMB
         {
             Track = track;
             _chapterListBindingSource.DataSource = Track.ChapterList.Chapters;
-           
+
+            ClearFirstColumn();
+
            titleArtistStatusLabel.Text = $"{Track.NowPlayingTrackInfo.Artist} – {Track.NowPlayingTrackInfo.Title}";
             if(Track.ChapterList.NumChapters == 0)
                 chaptersCountStatusLabel.Text = "No Chapters";
@@ -53,23 +61,32 @@ namespace ChapterListMB
 
         public void UpdateFirstColumn()
         {
+            foreach (DataGridViewRow row in chaptersDGV.Rows)
+            {
+                if (row.Index == RepeatSection.A?.ChapterNumber - 1)
+                {   // Repeat chapter A image
+                    SetReplayImage("black", row);
+                }
+                else if (row.Index == RepeatSection.B?.ChapterNumber - 1)
+                {   // Repeat chapter B image
+                    SetReplayImage("gray", row);
+                }
+                else if (row.Index == CurrentChapter?.ChapterNumber - 1)
+                {   // Current chapter playhead
+                    SetCurrentChapterImage();
+                }
+                else
+                {   // Empty image for blank cell
+                    row.Cells[0].Value = new Bitmap(16,16);
+                }
+            }
+        }
+
+        public void ClearFirstColumn()
+        {   // Blanks out first current chapter column
             for (int i = 0; i < chaptersDGV.RowCount; i++)
             {
-                if (i == CurrentChapter.ChapterNumber - 1)
-                {
-                    StringBuilder sb = new StringBuilder(">>");
-                    if (i == RepeatSection.A?.ChapterNumber - 1)
-                        sb.Insert(0, "A");
-                    else if (i == RepeatSection.B?.ChapterNumber - 1)
-                        sb.Insert(0, "B");
-                    chaptersDGV.Rows[CurrentChapter.ChapterNumber - 1].Cells[0].Value = sb.ToString();
-                }
-                else if (i == RepeatSection.A?.ChapterNumber - 1)
-                    chaptersDGV.Rows[i].Cells[0].Value = "A";
-                else if (i == RepeatSection.B?.ChapterNumber - 1)
-                    chaptersDGV.Rows[i].Cells[0].Value = "B";
-                else
-                    chaptersDGV.Rows[i].Cells[0].Value = string.Empty;
+                chaptersDGV.Rows[i].Cells[0].Value = new Bitmap(16, 16);
             }
         }
 
@@ -78,11 +95,17 @@ namespace ChapterListMB
             CurrentChapter = chapter;
             chaptersCountStatusLabel.Text = $"{CurrentChapter.ChapterNumber}/{Track.ChapterList.NumChapters} – {CurrentChapter.Title}";
 
-            foreach (var dgvRow in chaptersDGV.Rows)
+            SetRowColors();
+            UpdateFirstColumn();
+        }
+
+        private void SetRowColors()
+        {
+            foreach (var dgvRow in chaptersDGV.Rows) // Reset row colors to defaults
             {
                 DataGridViewRow row = (DataGridViewRow) dgvRow;
-                row.DefaultCellStyle = (row.Index % 2) == 0 ? _defaultCellStyleA : _defaultCellStyleB;
-                row.Cells[2].Style = (row.Index % 2) == 0 ? _defaultCellStyleA : _defaultCellStyleB;
+                row.DefaultCellStyle = (row.Index%2) == 0 ? _defaultCellStyleA : _defaultCellStyleB;
+                row.Cells[2].Style = (row.Index%2) == 0 ? _defaultCellStyleA : _defaultCellStyleB;
             }
             var selectedStyle = new DataGridViewCellStyle
             {
@@ -91,15 +114,14 @@ namespace ChapterListMB
             };
             chaptersDGV.Rows[CurrentChapter.ChapterNumber - 1].DefaultCellStyle = selectedStyle;
 
-            var boldStyle = new DataGridViewCellStyle(selectedStyle);
+            var boldStyle = new DataGridViewCellStyle(selectedStyle);   // Bold the current chapter title text
             boldStyle.Font = new Font(FontFamily.GenericSansSerif, 8.25f, FontStyle.Bold);
             chaptersDGV.Rows[CurrentChapter.ChapterNumber - 1].Cells[2].Style = boldStyle;
-            UpdateFirstColumn();
         }
+
         private Chapter GetSelectedDGVChapter()
         {
-            var firstRow = chaptersDGV.Rows[0];
-            if (chaptersDGV.SelectedRows.Contains(firstRow))
+            if (chaptersDGV.SelectedRows.Contains(chaptersDGV.Rows[0]))
             {
                 MessageBox.Show("Cannot remove or change position of first chapter.");
                 return null;
@@ -115,7 +137,7 @@ namespace ChapterListMB
         {
             string newChapterName = comboBoxNewChapterName.Text == "<Default>"
                 ? string.Empty
-                : comboBoxNewChapterName.Text;
+                : comboBoxNewChapterName.Text;  // Uses text from center combo box for new chapter name
             OnAddChapterButtonClickedRouted(newChapterName);
         }
         
@@ -162,19 +184,17 @@ namespace ChapterListMB
             if (e.RowIndex >= 0 && e.RowIndex < Track.ChapterList.NumChapters)
             {
                 Chapter chapt = ((List<Chapter>) _chapterListBindingSource.DataSource)[e.RowIndex];
-                //var chapt = ((sender as DataGridView).DataSource as List<Chapter>)[e.RowIndex];
                 OnSelectedItemDoubleClickedRouted(chapt);
             }
         }
         private void chaptersDGV_CellEndEdit(object sender, DataGridViewCellEventArgs e)
-        {   // Changes chapter title
+        {   // Changes chapter title from editbox
             Track.ChapterList.SaveChaptersToFile();
         }
-
         
         public event EventHandler<Chapter> SelectedItemDoubleClickedRouted;
         protected virtual void OnSelectedItemDoubleClickedRouted(Chapter e)
-        {
+        {   
             SelectedItemDoubleClickedRouted?.Invoke(this, e);
         }
 
@@ -200,15 +220,68 @@ namespace ChapterListMB
                 new ChapterChangeEventArgs(c, c.Title, newPosition.Value);
             ChangeChapterRequested?.Invoke(this, chapterChange);
         }
-        private void chaptersDGV_CellClick(object sender, DataGridViewCellEventArgs e)
+        private void OnChaptersDgvCellClick(object sender, DataGridViewCellEventArgs e)
         {   // A-B Repeating
             if((e.ColumnIndex == 0) )
             {
-                RepeatSection.ReceiveChapter((Chapter)chaptersDGV.Rows[e.RowIndex].DataBoundItem);
-                if(RepeatSection.TrackDuration == TimeSpan.Zero)
-                    RepeatSection.TrackDuration = Track.NowPlayingTrackInfo.Duration;
+                Chapter toRepeat = (Chapter) chaptersDGV.Rows[e.RowIndex].DataBoundItem;
+                RepeatSection.ReceiveChapter(toRepeat, Track.NowPlayingTrackInfo.Duration);
                 UpdateFirstColumn();
+                SetCurrentChapterImage();
             }
+        }
+
+        private void OnChaptersDgvSelectionChanged(object sender, EventArgs e)
+        {   
+            
+            if (chaptersDGV.Rows.Count > 1) // Don't call SCCPI until after current chapter has changed.
+            {
+                if (CurrentChapter == null || chaptersDGV.SelectedRows.Count < 1) return;
+                DataGridViewRow selectedChapterRow = chaptersDGV.SelectedRows[0];
+                if (selectedChapterRow.Index == CurrentChapter.ChapterNumber- 1)
+                {
+                    SetCurrentChapterImage();
+                }
+                else
+                {
+                    UpdateFirstColumn();
+                }
+            }
+        }
+
+        private void SetCurrentChapterImage()
+        {
+            DataGridViewRow selectedRow = chaptersDGV.SelectedRows[0];
+            if (selectedRow.Index == CurrentChapter.ChapterNumber - 1)
+            {   // Current chapter is selected
+                if (selectedRow.Index == RepeatSection.A?.ChapterNumber - 1
+                    || selectedRow.Index == RepeatSection.B?.ChapterNumber - 1)
+                {
+                    SetReplayImage("white", selectedRow);
+                }
+                else
+                {
+                    SetPlayheadImage("white");
+                }
+            }
+            else
+            {   // Other chapter is selected
+                SetPlayheadImage("black");
+            }
+        }
+
+        private void SetReplayImage(string color, DataGridViewRow row)
+        {
+            Assembly asm = Assembly.GetExecutingAssembly();
+            Stream myPlayheadStream = asm.GetManifestResourceStream($"ChapterListMB.Resources.replaychapter-{color}.png");
+            row.Cells[0].Value = Image.FromStream(myPlayheadStream);
+        }
+
+        private void SetPlayheadImage(string color)
+        {
+            Assembly asm = Assembly.GetExecutingAssembly();
+            Stream myPlayheadStream = asm.GetManifestResourceStream($"ChapterListMB.Resources.activechapter-{color}.png");
+            chaptersDGV.Rows[CurrentChapter.ChapterNumber - 1].Cells[0].Value = Image.FromStream(myPlayheadStream);
         }
     }
 }

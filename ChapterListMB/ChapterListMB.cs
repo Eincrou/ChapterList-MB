@@ -35,7 +35,7 @@ namespace MusicBeePlugin
             _about.MinInterfaceVersion = MinInterfaceVersion;
             _about.MinApiRevision = MinApiRevision;
             _about.ReceiveNotifications = (ReceiveNotificationFlags.PlayerEvents);
-            _about.ConfigurationPanelHeight = 0;   // height in pixels that musicbee should reserve in a panel for config settings. When set, a handle to an empty panel will be passed to the Configure function
+            _about.ConfigurationPanelHeight = 40;   // height in pixels that musicbee should reserve in a panel for config settings. When set, a handle to an empty panel will be passed to the Configure function
 
             CreateMenuItem();
             return _about;
@@ -51,13 +51,17 @@ namespace MusicBeePlugin
             if (panelHandle != IntPtr.Zero)
             {
                 Panel configPanel = (Panel)Panel.FromHandle(panelHandle);
-                Label prompt = new Label();
-                prompt.AutoSize = true;
-                prompt.Location = new Point(0, 0);
-                prompt.Text = "prompt:";
-                TextBox textBox = new TextBox();
-                textBox.Bounds = new Rectangle(60, 0, 100, textBox.Height);
-                configPanel.Controls.AddRange(new Control[] { prompt, textBox });
+                Label lblLaunchStartup = new Label();
+                lblLaunchStartup.AutoSize = true;
+                lblLaunchStartup.Location = new Point(0, 0);
+                lblLaunchStartup.Text = "launch on startup:";
+                CheckBox cbLaunchStartup = new CheckBox();
+                cbLaunchStartup.AutoSize = true;
+                cbLaunchStartup.Location = new Point(0, 0);
+                cbLaunchStartup.Text = "Launch on Startup";
+                //TextBox textBox = new TextBox();
+                //textBox.Bounds = new Rectangle(60, 0, 100, textBox.Height);
+                configPanel.Controls.AddRange(new Control[] { cbLaunchStartup });
             }
             return false;
         }
