@@ -43,7 +43,6 @@
             this.chaptersCountStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.comboBoxNewChapterName = new System.Windows.Forms.ComboBox();
-            this.lblNewChapt = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.chaptersDGV)).BeginInit();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -80,6 +79,7 @@
             this.shiftPositionBackButton.Size = new System.Drawing.Size(40, 35);
             this.shiftPositionBackButton.TabIndex = 5;
             this.shiftPositionBackButton.Text = "<<";
+            this.toolTip1.SetToolTip(this.shiftPositionBackButton, "Nudges the position of the selected chapter. backwards.,");
             this.shiftPositionBackButton.UseVisualStyleBackColor = true;
             this.shiftPositionBackButton.Click += new System.EventHandler(this.shiftPositionBackButton_Click);
             // 
@@ -91,6 +91,7 @@
             this.shiftPositionFwdButton.Size = new System.Drawing.Size(40, 35);
             this.shiftPositionFwdButton.TabIndex = 6;
             this.shiftPositionFwdButton.Text = ">>";
+            this.toolTip1.SetToolTip(this.shiftPositionFwdButton, "Nudges the position of the selected chapter. forwards,");
             this.shiftPositionFwdButton.UseVisualStyleBackColor = true;
             this.shiftPositionFwdButton.Click += new System.EventHandler(this.shiftPositionFwdButton_Click);
             // 
@@ -194,28 +195,16 @@
             "Bridge",
             "Solo",
             "Outro"});
-            this.comboBoxNewChapterName.Location = new System.Drawing.Point(120, 308);
+            this.comboBoxNewChapterName.Location = new System.Drawing.Point(120, 302);
             this.comboBoxNewChapterName.Name = "comboBoxNewChapterName";
             this.comboBoxNewChapterName.Size = new System.Drawing.Size(85, 21);
             this.comboBoxNewChapterName.TabIndex = 9;
-            // 
-            // lblNewChapt
-            // 
-            this.lblNewChapt.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.lblNewChapt.AutoSize = true;
-            this.lblNewChapt.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblNewChapt.Location = new System.Drawing.Point(116, 288);
-            this.lblNewChapt.Name = "lblNewChapt";
-            this.lblNewChapt.Size = new System.Drawing.Size(92, 13);
-            this.lblNewChapt.TabIndex = 10;
-            this.lblNewChapt.Text = "New Chapter Title";
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(309, 361);
-            this.Controls.Add(this.lblNewChapt);
             this.Controls.Add(this.comboBoxNewChapterName);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.chaptersDGV);
@@ -249,6 +238,5 @@
         private System.Windows.Forms.DataGridViewImageColumn ChapterStatus;
         private System.Windows.Forms.DataGridViewTextBoxColumn positionCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn titleCol;
-        private System.Windows.Forms.Label lblNewChapt;
     }
 }

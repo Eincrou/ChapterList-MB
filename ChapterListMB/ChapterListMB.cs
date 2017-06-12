@@ -18,6 +18,7 @@ namespace MusicBeePlugin
         private Track _track;
         private Timer _timer;
         private Chapter _currentChapter;
+        private bool _launchOnStartup;
 
         public PluginInfo Initialise(IntPtr apiInterfacePtr)
         {
@@ -93,7 +94,6 @@ namespace MusicBeePlugin
             {
                 case NotificationType.PluginStartup:
                     // perform startup initialisation
-                    
                     _timer = new Timer(100);
                     _timer.Elapsed += _timer_Elapsed;
                     switch (mbApiInterface.Player_GetPlayState())
@@ -176,7 +176,7 @@ namespace MusicBeePlugin
         private void OnMenuClicked(object sender, EventArgs args)
         {
             _mainForm = new MainForm();
-            //mbApiInterface.MB_AddPanel(_mainForm.DataGridView, PluginPanelDock.ApplicationWindow);
+            //mbApiInterface.MB_AddPanel(_mainForm.DataGridView, PluginPanelDock.);
             _mainForm.Show();
             SubscribeToEvents();
             if (mbApiInterface.Player_GetPlayState() != PlayState.Undefined)
