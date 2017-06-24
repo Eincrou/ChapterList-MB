@@ -18,7 +18,7 @@ namespace ChapterListMB
                 new XElement("Chapterlist", new XAttribute("version", "1.0")
                 )
             );
-            foreach (var chapter in chapList.Chapters)
+            foreach (var chapter in chapList)
             {
                 var newElement = new XElement("Chapter",
                     new XAttribute("pos", chapter.Position),

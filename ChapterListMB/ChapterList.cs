@@ -1,31 +1,19 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace ChapterListMB
 {
-    public class ChapterList : IEnumerable<Chapter>
+    public class ChapterList : Collection<Chapter>
     {
-        /// <summary>
-        /// Gets the list of all chapters in this ChapterList.
-        /// </summary>
-        public List<Chapter> Chapters { get; } = new List<Chapter>();
-
-        public Chapter this[int index]
-        {
-            get { return Chapters[index]; }
-            set
-            {
-                Chapters.Insert(index, value);
-            }
-        }
         /// <summary>
         /// Gets the total number of chapters in this ChapterList.
         /// </summary>
-        public int NumChapters => Chapters.Count;
+        public int NumChapters => Items.Count;
 
         public ChapterList()
         {
@@ -33,7 +21,10 @@ namespace ChapterListMB
         }
         public ChapterList(List<Chapter> chapters)
         {
-            Chapters = chapters;
+            foreach (Chapter c in chapters)
+            {
+                Items.Add(c);
+            }
         }
         /// <summary>
         /// Creates and adds a new chapter to the list, based on specified parameters.
@@ -42,7 +33,7 @@ namespace ChapterListMB
         /// <param name="position">Position in milliseconds of the new chapter</param>
         public void CreateNewChapter(string name, int position)
         {
-            Chapters.Add(string.IsNullOrWhiteSpace(name) ? new Chapter(position) : new Chapter(position, name));
+            Items.Add(string.IsNullOrWhiteSpace(name) ? new Chapter(position) : new Chapter(position, name));
             CheckForZeroPositionChapter();
             SortChapters();
             OnChapterListUpdated();
@@ -53,7 +44,7 @@ namespace ChapterListMB
         /// <param name="position"></param>
         public void CreateNewChapter(int position)
         {
-            Chapters.Add(new Chapter(position));
+            Items.Add(new Chapter(position));
             CheckForZeroPositionChapter();
             SortChapters();
             OnChapterListUpdated();
@@ -61,13 +52,13 @@ namespace ChapterListMB
 
         private void CheckForZeroPositionChapter()
         {
-            if ((Chapters.Count == 0) || (Chapters.First().Position != 0))
-                Chapters.Add(new Chapter(0, "Start of first chapter"));
+            if ((Items.Count == 0) || (Items[0].Position != 0))
+                Items.Add(new Chapter(0, "Start of first chapter"));
         }
         public void RemoveChapter(Chapter chapterToRemove)
         {
-            if (!Chapters.Contains(chapterToRemove)) return;
-            Chapters.Remove(chapterToRemove);
+            if (!Items.Contains(chapterToRemove)) return;
+            Items.Remove(chapterToRemove);
             SortChapters();
             OnChapterListUpdated();
         }
@@ -78,9 +69,10 @@ namespace ChapterListMB
         }
         private void SortChapters()
         {
-            Chapters.Sort();
+            List<Chapter> lc = new List<Chapter>(Items);
+            lc.Sort();
             var chapterNumber = 1;
-            foreach (var chapter in Chapters)
+            foreach (var chapter in Items)
             {
                 chapter.SetChapterNumber(chapterNumber);
                 chapterNumber++;
@@ -90,18 +82,21 @@ namespace ChapterListMB
 
         public void ChangeChapter(Chapter chapterToChange, string newTitle)
         {
-            Chapters.Find(e=>e == chapterToChange).Title = newTitle;
+            List<Chapter> lc = new List<Chapter>(Items);
+            lc.Find(e=>e == chapterToChange).Title = newTitle;
             OnChapterListUpdated();
         }
 
         internal void ChangeChapter(Chapter chapterToChange, int newPosition)
         {
-            Chapters.Find(e => e == chapterToChange).Position = newPosition;
+            List<Chapter> lc = new List<Chapter>(Items);
+            lc.Find(e => e == chapterToChange).Position = newPosition;
             OnChapterListUpdated();
         }
         internal void ChangeChapter(Chapter chapterToChange, string newTitle, int newPosition)
         {
-            var chapt = Chapters.Find(e => e == chapterToChange);
+            List<Chapter> lc = new List<Chapter>(Items);
+            var chapt = lc.Find(e => e == chapterToChange);
             chapt.Title = newTitle;
             chapt.Position = newPosition;
             OnChapterListUpdated();
@@ -109,7 +104,8 @@ namespace ChapterListMB
 
         internal void ChangeChapter(Chapter chapterToChange, Chapter newChapter)
         {
-            var oldChapt = Chapters.Find(e => e == chapterToChange);
+            List<Chapter> lc = new List<Chapter>(Items);
+            var oldChapt = lc.Find(e => e == chapterToChange);
             oldChapt.Title = newChapter.Title;
             oldChapt.Position = newChapter.Position;
             OnChapterListUpdated();
@@ -117,18 +113,18 @@ namespace ChapterListMB
 
         public Chapter GetCurrentChapterFromPosition(int position)
         {
-            for (int i = 1; i < Chapters.Count; i++)
+            for (int i = 1; i < Items.Count; i++)
             {
-                if (position <= Chapters[i].Position)
-                    return Chapters[i-1];
+                if (position <= Items[i].Position)
+                    return Items[i-1];
             }
-            return Chapters[Chapters.Count - 1];
+            return Items[Items.Count - 1];
         }
 
         private bool FindChapter(Chapter chapter, int position)
         {
-            var currChapIndex = Chapters.IndexOf(chapter);
-            return Chapters[currChapIndex + 1].Position - position > chapter.Position;
+            var currChapIndex = Items.IndexOf(chapter);
+            return Items[currChapIndex + 1].Position - position > chapter.Position;
         }
 
 
@@ -137,16 +133,6 @@ namespace ChapterListMB
         protected virtual void OnChapterListUpdated()
         {
             ChapterListUpdated?.Invoke(this, EventArgs.Empty);
-        }
-
-        public IEnumerator<Chapter> GetEnumerator()
-        {
-            return Chapters.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return Chapters.GetEnumerator();
         }
     }
 }

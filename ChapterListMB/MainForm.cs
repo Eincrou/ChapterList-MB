@@ -51,7 +51,7 @@ namespace ChapterListMB
         public void UpdateTrackMethod(Track track)
         {
             Track = track;
-            _chapterListBindingSource.DataSource = Track.ChapterList.Chapters;
+            _chapterListBindingSource.DataSource = Track.ChapterList;
 
             ClearFirstColumn();
 
@@ -202,7 +202,7 @@ namespace ChapterListMB
         {   // Requests to set player position to chapter position.
             if (e.RowIndex >= 0 && e.RowIndex < Track.ChapterList.NumChapters)
             {
-                Chapter chapt = ((List<Chapter>) _chapterListBindingSource.DataSource)[e.RowIndex];
+                Chapter chapt = ((ChapterList) _chapterListBindingSource.DataSource)[e.RowIndex];
                 OnSelectedItemDoubleClickedRouted(chapt);
             }
         }
