@@ -54,7 +54,7 @@
             this.addChapterButton.Name = "addChapterButton";
             this.addChapterButton.Size = new System.Drawing.Size(40, 35);
             this.addChapterButton.TabIndex = 0;
-            this.addChapterButton.Text = "Add";
+            this.addChapterButton.Text = "&Add";
             this.toolTip1.SetToolTip(this.addChapterButton, "Create a new chapter at the current player position.");
             this.addChapterButton.UseVisualStyleBackColor = true;
             this.addChapterButton.Click += new System.EventHandler(this.addChapterButton_Click);
@@ -66,7 +66,7 @@
             this.removeChapterButton.Name = "removeChapterButton";
             this.removeChapterButton.Size = new System.Drawing.Size(57, 35);
             this.removeChapterButton.TabIndex = 2;
-            this.removeChapterButton.Text = "Remove";
+            this.removeChapterButton.Text = "&Remove";
             this.toolTip1.SetToolTip(this.removeChapterButton, "Delete the selected chapter.");
             this.removeChapterButton.UseVisualStyleBackColor = true;
             this.removeChapterButton.Click += new System.EventHandler(this.removeChapterButton_Click);

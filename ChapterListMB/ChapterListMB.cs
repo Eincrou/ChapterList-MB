@@ -28,11 +28,11 @@ namespace MusicBeePlugin
             _about.Name = "Chapter List | MB";
             _about.Description = "Creates chapters to jump to a position in a track.";
             _about.Author = "Eincrou";
-            _about.TargetApplication = "";   // current only applies to artwork, lyrics or instant messenger name that appears in the provider drop down selector or target Instant Messenger
+            _about.TargetApplication = "Chapter List | MB";   // current only applies to artwork, lyrics or instant messenger name that appears in the provider drop down selector or target Instant Messenger
             _about.Type = PluginType.General;
-            _about.VersionMajor = 1;  // your plugin version
+            _about.VersionMajor = 2;  // your plugin version
             _about.VersionMinor = 0;
-            _about.Revision = 1;
+            _about.Revision = 0;
             _about.MinInterfaceVersion = MinInterfaceVersion;
             _about.MinApiRevision = MinApiRevision;
             _about.ReceiveNotifications = (ReceiveNotificationFlags.PlayerEvents);
@@ -175,8 +175,9 @@ namespace MusicBeePlugin
 
         private void OnMenuClicked(object sender, EventArgs args)
         {
+            if (_mainForm != null) return;
             _mainForm = new MainForm();
-            //mbApiInterface.MB_AddPanel(_mainForm.DataGridView, PluginPanelDock.);
+            //mbApiInterface.MB_AddPanel(_mainForm.DataGridView, PluginPanelDock.ApplicationWindow);
             _mainForm.Show();
             SubscribeToEvents();
             if (mbApiInterface.Player_GetPlayState() != PlayState.Undefined)
@@ -192,6 +193,81 @@ namespace MusicBeePlugin
                 }
             }
         }
+
+        #region AddMusicBeePanel
+        
+        //  presence of this function indicates to MusicBee that this plugin has a dockable panel. MusicBee will create the control and pass it as the panel parameter
+        //  you can add your own controls to the panel if needed
+        //  you can control the scrollable area of the panel using the mbApiInterface.MB_SetPanelScrollableArea function
+        //  to set a MusicBee header for the panel, set about.TargetApplication in the Initialise function above to the panel header text
+        public int OnDockablePanelCreated(Control panel)
+        {
+            //    return the height of the panel and perform any initialisation here
+            //    MusicBee will call panel.Dispose() when the user removes this panel from the layout configuration
+            //    < 0 indicates to MusicBee this control is resizable and should be sized to fill the panel it is docked to in MusicBee
+            //    = 0 indicates to MusicBee this control resizeable
+            //    > 0 indicates to MusicBee the fixed height for the control.Note it is recommended you scale the height for high DPI screens(create a graphics object and get the DpiY value)
+
+            Label lbl = new Label
+            {
+                Text = "Sup, fools!",
+                AutoSize = true,
+                Location = new Point(0, 0)
+            };
+
+            Button btn = new Button
+            {
+                Text = "Button Test  Text",
+                AutoSize = true,
+                Location = new Point(0, 20)
+            };
+
+            DataGridView dgv = new DataGridView();
+            //dgv.AutoSize = true;
+            dgv.Location = new Point(0,60);
+
+            ListBox lb = new ListBox
+            {
+                DataSource = new List<string>() {"test1", "test2", "test3"},
+                Location = new Point(0, 120)
+            };
+
+            panel.Invoke(new Action(() =>
+            {
+                //panel.Controls.Add(lbl);
+                panel.Controls.AddRange(new Control[] {lbl, btn, lb});
+            }));
+
+            float dpiScaling = 0;
+            using (Graphics g = panel.CreateGraphics())
+            {
+                dpiScaling = g.DpiY / 96f;
+            }
+            panel.Paint += panel_Paint;
+            //return Convert.ToInt32(100 * dpiScaling);
+            return 0;
+        }
+
+        // presence of this function indicates to MusicBee that the dockable panel created above will show menu items when the panel header is clicked
+        // return the list of ToolStripMenuItems that will be displayed
+        public List<ToolStripItem> GetHeaderMenuItems()
+        {
+            ToolStripItem tsiTest1 = new ToolStripMenuItem();
+            tsiTest1.Name = "tsiTest1";
+            tsiTest1.Text = "Super testalicious!";
+            
+            List<ToolStripItem> list = new List<ToolStripItem>();
+            list.Add(tsiTest1);
+            return list;
+        }
+
+        private void panel_Paint(object sender, PaintEventArgs e)
+        {
+            //e.Graphics.Clear(Color.Red);
+            TextRenderer.DrawText(e.Graphics, "hello", SystemFonts.CaptionFont, new Point(10, 10), Color.Blue);
+        }
+
+        #endregion
 
 
         /* * * * * *

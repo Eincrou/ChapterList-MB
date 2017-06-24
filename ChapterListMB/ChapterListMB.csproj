@@ -60,10 +60,21 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="MainUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MainUserControl.Designer.cs">
+      <DependentUpon>MainUserControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="MusicBeeInterface.cs" />
     <Compile Include="NowPlayingTrackInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ChapterListMB.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -82,12 +93,20 @@
     <None Include="app.config" />
     <None Include="ClassDiagram1.cd" />
     <None Include="myKeyFile.snk" />
+    <None Include="Properties\DataSources\ChapterList.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="MainUserControl.resx">
+      <DependentUpon>MainUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\activechapter-black.png" />
     <EmbeddedResource Include="Resources\activechapter-gray.png" />
     <EmbeddedResource Include="Resources\activechapter-white.png" />

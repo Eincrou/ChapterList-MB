@@ -9,6 +9,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Documents;
 using System.Windows.Forms;
 using System.Windows.Media.Imaging;
 
@@ -101,11 +102,10 @@ namespace ChapterListMB
 
         private void SetRowColors()
         {
-            foreach (var dgvRow in chaptersDGV.Rows) // Reset row colors to defaults
+            foreach (DataGridViewRow dgvRow in chaptersDGV.Rows) // Reset row colors to defaults
             {
-                DataGridViewRow row = (DataGridViewRow) dgvRow;
-                row.DefaultCellStyle = (row.Index%2) == 0 ? _defaultCellStyleA : _defaultCellStyleB;
-                row.Cells[2].Style = (row.Index%2) == 0 ? _defaultCellStyleA : _defaultCellStyleB;
+                dgvRow.DefaultCellStyle = (dgvRow.Index%2) == 0 ? _defaultCellStyleA : _defaultCellStyleB;
+                dgvRow.Cells[2].Style = (dgvRow.Index%2) == 0 ? _defaultCellStyleA : _defaultCellStyleB;
             }
             var selectedStyle = new DataGridViewCellStyle
             {
@@ -155,10 +155,20 @@ namespace ChapterListMB
                 return;
             }
 
-            int? newPosition = chapterToShiftBack.Position -
-                               (ModifierKeys == Keys.Shift
-                                   ? (int) Properties.Settings.Default.ChapterPositionShiftValue.TotalMilliseconds*4
-                                   : (int) Properties.Settings.Default.ChapterPositionShiftValue.TotalMilliseconds);
+            int? newPosition = chapterToShiftBack.Position;
+            switch (ModifierKeys)
+            {
+                case Keys.Shift:
+                    newPosition -= (int) Properties.Settings.Default.ChapterPositionShiftValue.TotalMilliseconds*4;
+                    break;
+                case Keys.Control:
+                    newPosition -= (int)Properties.Settings.Default.ChapterPositionShiftValue.TotalMilliseconds/2;
+                    break;
+                default:
+                    newPosition -= (int)Properties.Settings.Default.ChapterPositionShiftValue.TotalMilliseconds;
+                    break;
+            }
+
             if (newPosition < 1) newPosition = 1;
             OnChangeChapterRequested(chapterToShiftBack, null, newPosition);
             chaptersDGV.UpdateCellValue(1, chapterToShiftBack.ChapterNumber - 1);
@@ -170,10 +180,19 @@ namespace ChapterListMB
             {
                 return;
             }
-            int? newPosition = chapterToShiftForwards.Position +
-                               (ModifierKeys == Keys.Shift
-                                   ? (int) Properties.Settings.Default.ChapterPositionShiftValue.TotalMilliseconds*4
-                                   : (int) Properties.Settings.Default.ChapterPositionShiftValue.TotalMilliseconds);
+            int? newPosition = chapterToShiftForwards.Position;
+            switch (ModifierKeys)
+            {
+                case Keys.Shift:
+                    newPosition += (int)Properties.Settings.Default.ChapterPositionShiftValue.TotalMilliseconds * 4;
+                    break;
+                case Keys.Control:
+                    newPosition += (int)Properties.Settings.Default.ChapterPositionShiftValue.TotalMilliseconds / 2;
+                    break;
+                default:
+                    newPosition += (int)Properties.Settings.Default.ChapterPositionShiftValue.TotalMilliseconds;
+                    break;
+            }
             if (newPosition > Track.NowPlayingTrackInfo.Duration.TotalMilliseconds)
                 newPosition = (int)Track.NowPlayingTrackInfo.Duration.TotalMilliseconds;
             OnChangeChapterRequested(chapterToShiftForwards, null, newPosition);
