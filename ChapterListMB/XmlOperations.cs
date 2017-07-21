@@ -11,7 +11,11 @@ namespace ChapterListMB
 {
     internal static class XmlOperations
     {
-        public static void SaveChapterListToXml(ChapterList chapList)
+        /// <summary>
+        /// Saves provided ChapterList to XML format
+        /// </summary>
+        /// <param name="chapList"></param>
+        internal static void SaveChapterListToXml(ChapterList chapList)
         {
             var xmlDoc = new XDocument(
                 new XDeclaration("1.0", "UTF-8", "yes"),
@@ -28,7 +32,11 @@ namespace ChapterListMB
             }
             xmlDoc.Save(Track.XmlPath.LocalPath);
         }
-        public static void ReadChapterListFromXml(ChapterList chapList)
+        /// <summary>
+        /// Reads ChapterList data into the provided ChapterList object
+        /// </summary>
+        /// <param name="chapList">Object to read XML chapters into</param>
+        internal static void ReadChapterListFromXml(ChapterList chapList)
         {
             try
             {

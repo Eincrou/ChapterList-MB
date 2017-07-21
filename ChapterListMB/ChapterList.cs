@@ -55,6 +55,10 @@ namespace ChapterListMB
             if ((Items.Count == 0) || (Items[0].Position != 0))
                 Items.Add(new Chapter(0, "Start of first chapter"));
         }
+        /// <summary>
+        /// Removes the provided chapter from the ChapterList
+        /// </summary>
+        /// <param name="chapterToRemove">Chapter to remove</param>
         public void RemoveChapter(Chapter chapterToRemove)
         {
             if (!Items.Contains(chapterToRemove)) return;
@@ -62,52 +66,72 @@ namespace ChapterListMB
             SortChapters();
             OnChapterListUpdated();
         }
-
+        /// <summary>
+        /// Saves ChapterList to XML file
+        /// </summary>
         public void SaveChaptersToFile()
         {
             XmlOperations.SaveChapterListToXml(this);
         }
         private void SortChapters()
         {
-            List<Chapter> lc = new List<Chapter>(Items);
-            lc.Sort();
-            var chapterNumber = 1;
-            foreach (var chapter in Items)
+            List<Chapter> itemsSaved = Items.ToList();
+            Items.Clear();
+            var ordereditems = itemsSaved.OrderBy(c => c.Position);
+            int chapterNumber = 1;
+            foreach (Chapter chapter in ordereditems)
             {
                 chapter.SetChapterNumber(chapterNumber);
                 chapterNumber++;
+                Items.Add(chapter);
             }
             OnChapterListUpdated();
         }
-
+        /// <summary>
+        /// Changes the title of a given chapter
+        /// </summary>
+        /// <param name="chapterToChange"></param>
+        /// <param name="newTitle"></param>
         public void ChangeChapter(Chapter chapterToChange, string newTitle)
         {
-            List<Chapter> lc = new List<Chapter>(Items);
-            lc.Find(e=>e == chapterToChange).Title = newTitle;
+            int index = Items.IndexOf(chapterToChange);
+            Items[index].Title = newTitle;
             OnChapterListUpdated();
         }
-
-        internal void ChangeChapter(Chapter chapterToChange, int newPosition)
+        /// <summary>
+        /// Changes the position of a given chapter
+        /// </summary>
+        /// <param name="chapterToChange"></param>
+        /// <param name="newPosition"></param>
+        public void ChangeChapter(Chapter chapterToChange, int newPosition)
         {
-            List<Chapter> lc = new List<Chapter>(Items);
-            lc.Find(e => e == chapterToChange).Position = newPosition;
+            int index = Items.IndexOf(chapterToChange);
+            Items[index].Position = newPosition;
             OnChapterListUpdated();
         }
-        internal void ChangeChapter(Chapter chapterToChange, string newTitle, int newPosition)
+        /// <summary>
+        /// Changes the title and position of a given chapter
+        /// </summary>
+        /// <param name="chapterToChange"></param>
+        /// <param name="newTitle"></param>
+        /// <param name="newPosition"></param>
+        public void ChangeChapter(Chapter chapterToChange, string newTitle, int newPosition)
         {
-            List<Chapter> lc = new List<Chapter>(Items);
-            var chapt = lc.Find(e => e == chapterToChange);
-            chapt.Title = newTitle;
-            chapt.Position = newPosition;
+            int index = Items.IndexOf(chapterToChange);
+            Items[index].Title = newTitle;
+            Items[index].Position = newPosition;
             OnChapterListUpdated();
         }
-
-        internal void ChangeChapter(Chapter chapterToChange, Chapter newChapter)
+        /// <summary>
+        /// Changes a give
+        /// </summary>
+        /// <param name="chapterToChange"></param>
+        /// <param name="newChapter"></param>
+        public void ChangeChapter(Chapter chapterToChange, Chapter newChapter)
         {
-            List<Chapter> lc = new List<Chapter>(Items);
-            var oldChapt = lc.Find(e => e == chapterToChange);
-            oldChapt.Title = newChapter.Title;
-            oldChapt.Position = newChapter.Position;
+            int index = Items.IndexOf(chapterToChange);
+            Items[index].Title = newChapter.Title;
+            Items[index].Position = newChapter.Position;
             OnChapterListUpdated();
         }
 
@@ -120,13 +144,6 @@ namespace ChapterListMB
             }
             return Items[Items.Count - 1];
         }
-
-        private bool FindChapter(Chapter chapter, int position)
-        {
-            var currChapIndex = Items.IndexOf(chapter);
-            return Items[currChapIndex + 1].Position - position > chapter.Position;
-        }
-
 
         public event EventHandler ChapterListUpdated;
 

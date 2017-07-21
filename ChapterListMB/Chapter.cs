@@ -40,7 +40,10 @@ namespace ChapterListMB
             Title = title;
             Position = position;
         }
-
+        /// <summary>
+        /// Sets the position of the chapter in the ChapterList
+        /// </summary>
+        /// <param name="num">Position in the list</param>
         public void SetChapterNumber(int num)
         {
             ChapterNumber = num;
