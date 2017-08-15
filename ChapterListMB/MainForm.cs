@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows.Documents;
 using System.Windows.Forms;
 using System.Windows.Media.Imaging;
+using ChapterListMB.Properties;
 
 namespace ChapterListMB
 {
@@ -52,12 +53,20 @@ namespace ChapterListMB
         {
             Track = track;
             _chapterListBindingSource.DataSource = Track.ChapterList;
-
+            
             ClearFirstColumn();
 
            titleArtistStatusLabel.Text = $"{Track.NowPlayingTrackInfo.Artist} – {Track.NowPlayingTrackInfo.Title}";
-            if(Track.ChapterList.NumChapters == 0)
+            if (Track.ChapterList.NumChapters == 0)
+            {
                 chaptersCountStatusLabel.Text = "No Chapters";
+            }
+            else
+            {
+                if (CurrentChapter == null)
+                    SetCurrentChapterMethod(Track.ChapterList[0]);
+            }
+            SetButtonsEnabledState();
         }
 
         public void UpdateFirstColumn()
@@ -66,11 +75,11 @@ namespace ChapterListMB
             {
                 if (row.Index == RepeatSection.A?.ChapterNumber - 1)
                 {   // Repeat chapter A image
-                    SetReplayImage("black", row);
+                    SetReplayImage("A", row);
                 }
                 else if (row.Index == RepeatSection.B?.ChapterNumber - 1)
                 {   // Repeat chapter B image
-                    SetReplayImage("gray", row);
+                    SetReplayImage("B", row);
                 }
                 else if (row.Index == CurrentChapter?.ChapterNumber - 1)
                 {   // Current chapter playhead
@@ -109,8 +118,8 @@ namespace ChapterListMB
             }
             var selectedStyle = new DataGridViewCellStyle
             {
-                BackColor = Properties.Settings.Default.HighlightColor,
-                SelectionBackColor = Properties.Settings.Default.HighlightBackgroundColor
+                BackColor = Settings.Default.HighlightColor,
+                SelectionBackColor = Settings.Default.HighlightBackgroundColor
             };
             chaptersDGV.Rows[CurrentChapter.ChapterNumber - 1].DefaultCellStyle = selectedStyle;
 
@@ -133,6 +142,24 @@ namespace ChapterListMB
             }
             return (Chapter)chaptersDGV.SelectedRows[0].DataBoundItem;
         }
+
+        private void SetButtonsEnabledState()
+        {
+            if (Track.ChapterList.NumChapters == 0 || chaptersDGV.SelectedRows[0].Index == 0)
+            {
+                removeChapterButton.Enabled = false;
+                shiftPositionBackButton.Enabled = false;
+                shiftPositionFwdButton.Enabled = false;
+            }
+            else
+            {
+                removeChapterButton.Enabled = true;
+                shiftPositionBackButton.Enabled = true;
+                shiftPositionFwdButton.Enabled = true;
+            }
+        }
+        #region Event Handlers
+
         private void addChapterButton_Click(object sender, EventArgs e)
         {
             string newChapterName = comboBoxNewChapterName.Text == "<Default>"
@@ -159,13 +186,13 @@ namespace ChapterListMB
             switch (ModifierKeys)
             {
                 case Keys.Shift:
-                    newPosition -= (int) Properties.Settings.Default.ChapterPositionShiftValue.TotalMilliseconds*4;
+                    newPosition -= (int) Settings.Default.ChapterPositionShiftValue.TotalMilliseconds*4;
                     break;
                 case Keys.Control:
-                    newPosition -= (int)Properties.Settings.Default.ChapterPositionShiftValue.TotalMilliseconds/2;
+                    newPosition -= (int)Settings.Default.ChapterPositionShiftValue.TotalMilliseconds/2;
                     break;
                 default:
-                    newPosition -= (int)Properties.Settings.Default.ChapterPositionShiftValue.TotalMilliseconds;
+                    newPosition -= (int)Settings.Default.ChapterPositionShiftValue.TotalMilliseconds;
                     break;
             }
 
@@ -184,13 +211,13 @@ namespace ChapterListMB
             switch (ModifierKeys)
             {
                 case Keys.Shift:
-                    newPosition += (int)Properties.Settings.Default.ChapterPositionShiftValue.TotalMilliseconds * 4;
+                    newPosition += (int)Settings.Default.ChapterPositionShiftValue.TotalMilliseconds * 4;
                     break;
                 case Keys.Control:
-                    newPosition += (int)Properties.Settings.Default.ChapterPositionShiftValue.TotalMilliseconds / 2;
+                    newPosition += (int)Settings.Default.ChapterPositionShiftValue.TotalMilliseconds / 2;
                     break;
                 default:
-                    newPosition += (int)Properties.Settings.Default.ChapterPositionShiftValue.TotalMilliseconds;
+                    newPosition += (int)Settings.Default.ChapterPositionShiftValue.TotalMilliseconds;
                     break;
             }
             if (newPosition > Track.NowPlayingTrackInfo.Duration.TotalMilliseconds)
@@ -210,7 +237,11 @@ namespace ChapterListMB
         {   // Changes chapter title from editbox
             Track.ChapterList.SaveChaptersToFile();
         }
-        
+
+        #endregion
+
+        #region Events
+
         public event EventHandler<Chapter> SelectedItemDoubleClickedRouted;
         protected virtual void OnSelectedItemDoubleClickedRouted(Chapter e)
         {   
@@ -239,6 +270,8 @@ namespace ChapterListMB
                 new ChapterChangeEventArgs(c, c.Title, newPosition.Value);
             ChangeChapterRequested?.Invoke(this, chapterChange);
         }
+
+        #endregion
         private void OnChaptersDgvCellClick(object sender, DataGridViewCellEventArgs e)
         {   // A-B Repeating
             if((e.ColumnIndex == 0) )
@@ -251,21 +284,21 @@ namespace ChapterListMB
         }
 
         private void OnChaptersDgvSelectionChanged(object sender, EventArgs e)
-        {   
-            
-            if (chaptersDGV.Rows.Count > 1) // Don't call SCCPI until after current chapter has changed.
+        {
+            if (chaptersDGV.Rows.Count <= 1) return;    // Don't call SCCI until after current chapter has changed.
+            if (CurrentChapter == null || chaptersDGV.SelectedRows.Count < 1) return;
+            DataGridViewRow selectedChapterRow = chaptersDGV.SelectedRows[0];
+            if (selectedChapterRow.Index == CurrentChapter.ChapterNumber- 1)
             {
-                if (CurrentChapter == null || chaptersDGV.SelectedRows.Count < 1) return;
-                DataGridViewRow selectedChapterRow = chaptersDGV.SelectedRows[0];
-                if (selectedChapterRow.Index == CurrentChapter.ChapterNumber- 1)
-                {
-                    SetCurrentChapterImage();
-                }
-                else
-                {
-                    UpdateFirstColumn();
-                }
+                SetCurrentChapterImage();
             }
+            else
+            {
+                UpdateFirstColumn();
+            }
+
+            // Disable remove and position shift buttons if first chapter selected.
+            SetButtonsEnabledState();
         }
 
         private void SetCurrentChapterImage()
@@ -291,9 +324,20 @@ namespace ChapterListMB
 
         private void SetReplayImage(string color, DataGridViewRow row)
         {
-            Assembly asm = Assembly.GetExecutingAssembly();
-            Stream myPlayheadStream = asm.GetManifestResourceStream($"ChapterListMB.Resources.replaychapter-{color}.png");
-            row.Cells[0].Value = Image.FromStream(myPlayheadStream);
+            //Assembly asm = Assembly.GetExecutingAssembly();
+            //Stream myPlayheadStream = asm.GetManifestResourceStream($"ChapterListMB.Resources.replaychapter-{color}.png");
+            //row.Cells[0].Value = Image.FromStream(myPlayheadStream);
+            switch (color)
+            {
+                case "A":
+                    Bitmap repeatA = new Bitmap(Resources.RepeatA, new Size(16,16));
+                    row.Cells[0].Value = repeatA;
+                    break;
+                case "B":
+                    Bitmap repeatB = new Bitmap(Resources.RepeatB, new Size(16, 16));
+                    row.Cells[0].Value = repeatB;
+                    break;
+            }
         }
 
         private void SetPlayheadImage(string color)

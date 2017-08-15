@@ -31,9 +31,11 @@
             this.components = new System.ComponentModel.Container();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.chaptersBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.chapterListBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.btnAddChapter = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.timeCodeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.titleDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.chapterListBindingSource = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chaptersBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chapterListBindingSource)).BeginInit();
@@ -41,6 +43,9 @@
             // 
             // dataGridView1
             // 
+            this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridView1.AutoGenerateColumns = false;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -49,17 +54,32 @@
             this.dataGridView1.DataSource = this.chaptersBindingSource;
             this.dataGridView1.Location = new System.Drawing.Point(3, 3);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(240, 150);
+            this.dataGridView1.Size = new System.Drawing.Size(291, 235);
             this.dataGridView1.TabIndex = 0;
             // 
             // chaptersBindingSource
             // 
-            this.chaptersBindingSource.DataMember = "Chapters";
             this.chaptersBindingSource.DataSource = this.chapterListBindingSource;
             // 
-            // chapterListBindingSource
+            // btnAddChapter
             // 
-            this.chapterListBindingSource.DataSource = typeof(ChapterListMB.ChapterList);
+            this.btnAddChapter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnAddChapter.Location = new System.Drawing.Point(4, 244);
+            this.btnAddChapter.Name = "btnAddChapter";
+            this.btnAddChapter.Size = new System.Drawing.Size(30, 30);
+            this.btnAddChapter.TabIndex = 1;
+            this.btnAddChapter.Text = "+";
+            this.btnAddChapter.UseVisualStyleBackColor = true;
+            // 
+            // button1
+            // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button1.Location = new System.Drawing.Point(40, 244);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(30, 30);
+            this.button1.TabIndex = 1;
+            this.button1.Text = "-";
+            this.button1.UseVisualStyleBackColor = true;
             // 
             // timeCodeDataGridViewTextBoxColumn
             // 
@@ -78,13 +98,19 @@
             this.titleDataGridViewTextBoxColumn.HeaderText = "Chapter Title";
             this.titleDataGridViewTextBoxColumn.Name = "titleDataGridViewTextBoxColumn";
             // 
+            // chapterListBindingSource
+            // 
+            this.chapterListBindingSource.DataSource = typeof(ChapterListMB.ChapterList);
+            // 
             // MainUserControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.btnAddChapter);
             this.Controls.Add(this.dataGridView1);
             this.Name = "MainUserControl";
-            this.Size = new System.Drawing.Size(297, 496);
+            this.Size = new System.Drawing.Size(297, 279);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chaptersBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chapterListBindingSource)).EndInit();
@@ -99,5 +125,7 @@
         private System.Windows.Forms.BindingSource chaptersBindingSource;
         private System.Windows.Forms.DataGridViewTextBoxColumn timeCodeDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn titleDataGridViewTextBoxColumn;
+        private System.Windows.Forms.Button btnAddChapter;
+        private System.Windows.Forms.Button button1;
     }
 }

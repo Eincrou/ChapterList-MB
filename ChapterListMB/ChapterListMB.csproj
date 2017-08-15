@@ -114,6 +114,12 @@
     <EmbeddedResource Include="Resources\replaychapter-gray.png" />
     <EmbeddedResource Include="Resources\replaychapter-white.png" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\if_letter_A_blue_1553103.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\if_letter_B_blue_1553100.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy /Y "$(TargetDir)\*.*" "C:\Program Files (x86)\MusicBee\Plugins\"</PostBuildEvent>

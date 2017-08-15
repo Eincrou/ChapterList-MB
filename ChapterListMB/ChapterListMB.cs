@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Drawing.Text;
 using System.Linq;
 using ChapterListMB;
+using ChapterListMB.Properties;
 using Timer = System.Timers.Timer;
 
 namespace MusicBeePlugin
@@ -18,7 +19,8 @@ namespace MusicBeePlugin
         private Track _track;
         private Timer _timer;
         private Chapter _currentChapter;
-        private bool _launchOnStartup;
+
+        private readonly BindingSource _chapterListBindingSource = new BindingSource();
 
         public PluginInfo Initialise(IntPtr apiInterfacePtr)
         {
@@ -36,7 +38,7 @@ namespace MusicBeePlugin
             _about.MinInterfaceVersion = MinInterfaceVersion;
             _about.MinApiRevision = MinApiRevision;
             _about.ReceiveNotifications = (ReceiveNotificationFlags.PlayerEvents);
-            _about.ConfigurationPanelHeight = 40;   // height in pixels that musicbee should reserve in a panel for config settings. When set, a handle to an empty panel will be passed to the Configure function
+            _about.ConfigurationPanelHeight = 46;   // height in pixels that musicbee should reserve in a panel for config settings. When set, a handle to an empty panel will be passed to the Configure function
 
             CreateMenuItem();
             return _about;
@@ -52,17 +54,88 @@ namespace MusicBeePlugin
             if (panelHandle != IntPtr.Zero)
             {
                 Panel configPanel = (Panel)Panel.FromHandle(panelHandle);
-                Label lblLaunchStartup = new Label();
-                lblLaunchStartup.AutoSize = true;
-                lblLaunchStartup.Location = new Point(0, 0);
-                lblLaunchStartup.Text = "launch on startup:";
-                CheckBox cbLaunchStartup = new CheckBox();
-                cbLaunchStartup.AutoSize = true;
-                cbLaunchStartup.Location = new Point(0, 0);
-                cbLaunchStartup.Text = "Launch on Startup";
+                
+                CheckBox cbLaunchStartup = new CheckBox
+                {
+                    AutoSize = true,
+                    Location = new Point(0, 0),
+                    Text = "Launch on Startup",
+                    Checked = Settings.Default.StartWithMusicBee
+                };
+                cbLaunchStartup.CheckedChanged += (sender, args) =>
+                {
+                    CheckBox cb = sender as CheckBox;
+                    Settings.Default.StartWithMusicBee = cb.Checked;
+                    Settings.Default.Save();
+                };
+                Label lblShiftAmount = new Label
+                {
+                    Text = "Position shift amount (milliseconds):",
+                    AutoSize = true,
+                    Location = new Point(cbLaunchStartup.Width + 30, 2)
+                };
+                NumericUpDown nudShiftAmount = new NumericUpDown()
+                {
+                    Location = new Point(lblShiftAmount.Location.X + lblShiftAmount.Width + 110, 0),
+                    Width = 50,
+                    Text = "Chapter position shift amount (in milliseconds)",
+                    Maximum = 10000,
+                    Minimum = 10,
+                    Increment = 100,
+                };
+                nudShiftAmount.Value = (decimal) Settings.Default.ChapterPositionShiftValue.TotalMilliseconds;
+                nudShiftAmount.ValueChanged += (sender, args) =>
+                {
+                    NumericUpDown nud = (NumericUpDown) sender;
+                    Settings.Default.ChapterPositionShiftValue = new TimeSpan(0, 0, 0, 0, (int) nud.Value);
+                };
+                Label lblColorHighlight = new Label
+                {
+                    AutoSize = true,
+                    Location = new Point(0, 26),
+                    Text = "Highlight Color:"
+                };
+                ComboBox comboColorHighlight = new ComboBox
+                {
+                    Location = new Point(lblColorHighlight.Location.X + lblColorHighlight.Width, 26),
+                    DropDownStyle = ComboBoxStyle.DropDownList,
+                    Items = { Color.SkyBlue, Color.Yellow, Color.PaleGreen, Color.PaleVioletRed},
+                    SelectedItem = Settings.Default.HighlightColor,
+                };
+                comboColorHighlight.SelectedIndexChanged += (sender, args) =>
+                {
+                    ComboBox combo = (ComboBox) sender;
+                    Settings.Default.HighlightColor = (Color) combo.SelectedItem;
+                    Settings.Default.Save();
+                };
+                Label lblColorBackground = new Label
+                {
+                    AutoSize = true,
+                    Location = new Point(comboColorHighlight.Location.X + comboColorHighlight.Width + 8, 26),
+                    Text = "Background Color:"
+                };
+                ComboBox comboColorBackground = new ComboBox
+                {
+                    Location = new Point(lblColorBackground.Location.X + lblColorBackground.Width+8, 26),
+                    DropDownStyle = ComboBoxStyle.DropDownList,
+                    Items = { Color.Blue, Color.Gold, Color.Green, Color.Red },
+                    SelectedItem = Settings.Default.HighlightBackgroundColor,
+                };
+                comboColorBackground.SelectedIndexChanged += (sender, args) =>
+                {
+                    ComboBox combo = (ComboBox)sender;
+                    Settings.Default.HighlightBackgroundColor = (Color)combo.SelectedItem;
+                    Settings.Default.Save();
+                };
                 //TextBox textBox = new TextBox();
                 //textBox.Bounds = new Rectangle(60, 0, 100, textBox.Height);
-                configPanel.Controls.AddRange(new Control[] { cbLaunchStartup });
+                configPanel.Controls.AddRange(new Control[]
+                {
+                    cbLaunchStartup, lblShiftAmount, nudShiftAmount, lblColorHighlight, comboColorHighlight,
+                    lblColorBackground, comboColorBackground
+                });
+                
+
             }
             return false;
         }
@@ -78,7 +151,8 @@ namespace MusicBeePlugin
         // MusicBee is closing the plugin (plugin is being disabled by user or MusicBee is shutting down)
         public void Close(PluginCloseReason reason)
         {
-            _mainForm.Close();
+            _timer.Close();
+            _mainForm?.Close();
         }
 
         // uninstall this plugin - clean up any persisted files
@@ -209,34 +283,101 @@ namespace MusicBeePlugin
             //    = 0 indicates to MusicBee this control resizeable
             //    > 0 indicates to MusicBee the fixed height for the control.Note it is recommended you scale the height for high DPI screens(create a graphics object and get the DpiY value)
 
-            Label lbl = new Label
-            {
-                Text = "Sup, fools!",
-                AutoSize = true,
-                Location = new Point(0, 0)
-            };
+            
 
-            Button btn = new Button
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle
             {
-                Text = "Button Test  Text",
-                AutoSize = true,
-                Location = new Point(0, 20)
+                BackColor = SystemColors.Control,
             };
+            DataGridView chaptersDgv = new DataGridView
+            {
+                AllowUserToAddRows = false,
+                AllowUserToDeleteRows = false,
+                AllowUserToResizeColumns = false,
+                AllowUserToResizeRows = false,
+                AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1,
+                Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right,
+                BackgroundColor = SystemColors.Window,
+                BorderStyle = BorderStyle.Fixed3D,
+                CellBorderStyle = DataGridViewCellBorderStyle.None,
+                ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize,
+                Location = new Point(12, 12),
+                MinimumSize = new Size(200, 200),
+                MultiSelect = false,
+                Name = "chaptersDGV",
+                RowHeadersVisible = false,
+                RowHeadersWidth = 30,
+                RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing,
+                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
+                Size = new Size(panel.Width-16, panel.Height - 62),
+                TabIndex = 0,
+                //CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.OnChaptersDgvCellClick),
+                //CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.chaptersDGV_CellEndEdit),
+                //CellMouseDoubleClick += chaptersDGV_CellMouseDoubleClick,
+                // SelectionChanged += new System.EventHandler(this.OnChaptersDgvSelectionChanged),
+            };
+            DataGridViewImageColumn dgvChapterStatus = new DataGridViewImageColumn
+            {
+                HeaderText = "",
+                Name = "ChapterStatus",
+                ReadOnly = true,
+                Resizable = DataGridViewTriState.False,
+                Width = 30,
+            };
+            DataGridViewTextBoxColumn dgvPositionCol = new DataGridViewTextBoxColumn
+            {
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader,
+                DataPropertyName = "TimeCode",
+                HeaderText = "Position",
+                Name = "positionCol",
+                ReadOnly = true,
+                SortMode = DataGridViewColumnSortMode.NotSortable,
+                Width = 50
+            };
+            DataGridViewTextBoxColumn dgvTitleCol = new DataGridViewTextBoxColumn
+            {
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
+                DataPropertyName = "Title",
+                HeaderText = "Chapter Title",
+                Name = "titleCol",
+                SortMode = DataGridViewColumnSortMode.NotSortable
+            };
+            chaptersDgv.Columns.AddRange(dgvChapterStatus, dgvPositionCol, dgvTitleCol);
+            chaptersDgv.DataSource = _chapterListBindingSource;
 
-            DataGridView dgv = new DataGridView();
-            //dgv.AutoSize = true;
-            dgv.Location = new Point(0,60);
+
+            Button btnAddChapter = new Button
+            {
+                Text = "&Add",
+                Size = new Size(40, 35),
+                Location = new Point(8, panel.Height - 35 - 8),
+                Anchor = AnchorStyles.Left | AnchorStyles.Bottom,
+                TabIndex = 1
+            };
+            Button btnRemoveChapter = new Button
+            {
+                Text = "&Remove",
+                Size = new Size(60, 35),
+                Location = new Point(56, panel.Height - 35 - 8),
+                Anchor = AnchorStyles.Left | AnchorStyles.Bottom,
+                TabIndex = 2
+            };
 
             ListBox lb = new ListBox
             {
                 DataSource = new List<string>() {"test1", "test2", "test3"},
                 Location = new Point(0, 120)
             };
+            MainUserControl muc = new MainUserControl
+            {
+                Dock = DockStyle.Fill,
+            };
 
             panel.Invoke(new Action(() =>
             {
                 //panel.Controls.Add(lbl);
-                panel.Controls.AddRange(new Control[] {lbl, btn, lb});
+                panel.Controls.AddRange(new Control[] { btnAddChapter, btnRemoveChapter, chaptersDgv});
+                //panel.Controls.Add(muc);
             }));
 
             float dpiScaling = 0;
@@ -244,7 +385,7 @@ namespace MusicBeePlugin
             {
                 dpiScaling = g.DpiY / 96f;
             }
-            panel.Paint += panel_Paint;
+            //panel.Paint += panel_Paint;
             //return Convert.ToInt32(100 * dpiScaling);
             return 0;
         }
@@ -266,6 +407,20 @@ namespace MusicBeePlugin
         {
             //e.Graphics.Clear(Color.Red);
             TextRenderer.DrawText(e.Graphics, "hello", SystemFonts.CaptionFont, new Point(10, 10), Color.Blue);
+        }
+
+        private void chaptersDGV_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        {   // Requests to set player position to chapter position.
+            if (e.RowIndex >= 0 && e.RowIndex < _track.ChapterList.NumChapters)
+            {
+                Chapter chapt = ((ChapterList)_chapterListBindingSource.DataSource)[e.RowIndex];
+                OnSelectedItemDoubleClickedRouted(chapt);
+            }
+        }
+
+        private void OnSelectedItemDoubleClickedRouted(Chapter chapt)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion
