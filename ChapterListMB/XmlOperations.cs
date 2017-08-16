@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -32,6 +33,7 @@ namespace ChapterListMB
             }
             xmlDoc.Save(Track.XmlPath.LocalPath);
         }
+
         /// <summary>
         /// Reads ChapterList data into the provided ChapterList object
         /// </summary>
@@ -61,6 +63,36 @@ namespace ChapterListMB
             catch (Exception)
             {
                 // ignored
+            }
+        }
+
+        internal static Dictionary<string, SkinElementColors> GetSkinColors(string skinFile)
+        {
+            try
+            {
+                if (!System.IO.File.Exists(skinFile))
+                {
+                    throw new FileNotFoundException("This skin file could not be located");
+                }
+                Dictionary<string,SkinElementColors> skinElementColors = new Dictionary<string, SkinElementColors>();
+                XDocument skinDoc = XDocument.Load(skinFile);
+                var test = skinDoc.Root.Element("colours");
+                foreach (XElement xElement in skinDoc.Root.Element("colours").Elements())
+                {
+                    string foreground = xElement.Attribute("fg")?.Value;
+                    string background = xElement.Attribute("bg")?.Value;
+                    string background2 = xElement.Attribute("bg2")?.Value;
+                    string border = xElement.Attribute("bdr")?.Value;
+                    SkinElementColors elementColors = new SkinElementColors(xElement.Attribute("id").Value,
+                        foreground, background, background2, border);
+                    skinElementColors.Add(elementColors.ElementName, elementColors);
+                }
+                return skinElementColors;
+            }
+            catch (Exception)
+            {
+                
+                throw;
             }
         }
     }

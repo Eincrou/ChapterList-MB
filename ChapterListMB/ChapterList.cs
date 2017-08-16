@@ -144,7 +144,7 @@ namespace ChapterListMB
             }
             return Items[Items.Count - 1];
         }
-
+        
         public event EventHandler ChapterListUpdated;
 
         protected virtual void OnChapterListUpdated()

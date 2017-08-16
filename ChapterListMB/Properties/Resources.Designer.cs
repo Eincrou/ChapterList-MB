@@ -63,6 +63,56 @@ namespace ChapterListMB.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap ActiveChapterBlack {
+            get {
+                object obj = ResourceManager.GetObject("ActiveChapterBlack", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ActiveChapterWhite {
+            get {
+                object obj = ResourceManager.GetObject("ActiveChapterWhite", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ChapterAdd {
+            get {
+                object obj = ResourceManager.GetObject("ChapterAdd", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ChapterRemove {
+            get {
+                object obj = ResourceManager.GetObject("ChapterRemove", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap DoubleArrows {
+            get {
+                object obj = ResourceManager.GetObject("DoubleArrows", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap RepeatA {
             get {
                 object obj = ResourceManager.GetObject("RepeatA", resourceCulture);
@@ -77,6 +127,71 @@ namespace ChapterListMB.Properties {
             get {
                 object obj = ResourceManager.GetObject("RepeatB", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ShiftBack {
+            get {
+                object obj = ResourceManager.GetObject("ShiftBack", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Shiftforward {
+            get {
+                object obj = ResourceManager.GetObject("Shiftforward", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create a new chapter at the current player position..
+        /// </summary>
+        internal static string TooltipAddChapter {
+            get {
+                return ResourceManager.GetString("TooltipAddChapter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The name when a new chapter is added..
+        /// </summary>
+        internal static string TooltipChapterTitles {
+            get {
+                return ResourceManager.GetString("TooltipChapterTitles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete the selected chapter..
+        /// </summary>
+        internal static string TooltipRemoveChapter {
+            get {
+                return ResourceManager.GetString("TooltipRemoveChapter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nudges the position of the selected chapter backward..
+        /// </summary>
+        internal static string TooltipShiftBackward {
+            get {
+                return ResourceManager.GetString("TooltipShiftBackward", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nudges the position of the selected chapter forward..
+        /// </summary>
+        internal static string TooltipShiftFwd {
+            get {
+                return ResourceManager.GetString("TooltipShiftFwd", resourceCulture);
             }
         }
     }

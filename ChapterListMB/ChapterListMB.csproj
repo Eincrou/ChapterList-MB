@@ -66,8 +66,10 @@
     <Compile Include="MainUserControl.Designer.cs">
       <DependentUpon>MainUserControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Manager.cs" />
     <Compile Include="MusicBeeInterface.cs" />
     <Compile Include="NowPlayingTrackInfo.cs" />
+    <Compile Include="PanelManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ChapterListMB.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -81,6 +83,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="RepeatSection.cs" />
+    <Compile Include="SkinElementColors.cs" />
     <Compile Include="Track.cs" />
     <Compile Include="XmlOperations.cs" />
   </ItemGroup>
@@ -93,6 +96,7 @@
     <None Include="app.config" />
     <None Include="ClassDiagram1.cd" />
     <None Include="myKeyFile.snk" />
+    <Compile Include="PanelManager.EventHandlers.cs" />
     <None Include="Properties\DataSources\ChapterList.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -119,6 +123,21 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\if_letter_B_blue_1553100.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\if_double-arrow-right_383079.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\if_1_1_387516.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\if_1_2_387517.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\shiftback.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\shiftforward.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

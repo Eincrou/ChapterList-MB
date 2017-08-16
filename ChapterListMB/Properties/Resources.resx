@@ -118,10 +118,46 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="ActiveChapterBlack" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\activechapter-black.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ActiveChapterWhite" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\activechapter-white.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ChapterAdd" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\if_1_1_387516.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ChapterRemove" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\if_1_2_387517.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DoubleArrows" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\if_double-arrow-right_383079.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="RepeatA" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\if_letter_A_blue_1553103.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="RepeatB" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\if_letter_B_blue_1553100.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShiftBack" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\shiftback.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Shiftforward" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\shiftforward.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TooltipAddChapter" xml:space="preserve">
+    <value>Create a new chapter at the current player position.</value>
+  </data>
+  <data name="TooltipChapterTitles" xml:space="preserve">
+    <value>The name when a new chapter is added.</value>
+  </data>
+  <data name="TooltipRemoveChapter" xml:space="preserve">
+    <value>Delete the selected chapter.</value>
+  </data>
+  <data name="TooltipShiftBackward" xml:space="preserve">
+    <value>Nudges the position of the selected chapter backward.</value>
+  </data>
+  <data name="TooltipShiftFwd" xml:space="preserve">
+    <value>Nudges the position of the selected chapter forward.</value>
   </data>
 </root>

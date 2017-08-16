@@ -17,8 +17,10 @@ namespace MusicBeePlugin
         private PluginInfo _about = new PluginInfo();
         private MainForm _mainForm;
         private Track _track;
-        private Timer _timer;
+        //private Timer _timer;
         private Chapter _currentChapter;
+        private PanelManager _mbPanel;
+        private Manager _manager;
 
         private readonly BindingSource _chapterListBindingSource = new BindingSource();
 
@@ -38,9 +40,9 @@ namespace MusicBeePlugin
             _about.MinInterfaceVersion = MinInterfaceVersion;
             _about.MinApiRevision = MinApiRevision;
             _about.ReceiveNotifications = (ReceiveNotificationFlags.PlayerEvents);
-            _about.ConfigurationPanelHeight = 46;   // height in pixels that musicbee should reserve in a panel for config settings. When set, a handle to an empty panel will be passed to the Configure function
-
-            CreateMenuItem();
+            _about.ConfigurationPanelHeight = 50;   // height in pixels that musicbee should reserve in a panel for config settings. When set, a handle to an empty panel will be passed to the Configure function
+            
+            //CreateMenuItem();
             return _about;
         }
 
@@ -59,7 +61,7 @@ namespace MusicBeePlugin
                 {
                     AutoSize = true,
                     Location = new Point(0, 0),
-                    Text = "Launch on Startup",
+                    Text = "Launch window on Startup",
                     Checked = Settings.Default.StartWithMusicBee
                 };
                 cbLaunchStartup.CheckedChanged += (sender, args) =>
@@ -92,7 +94,7 @@ namespace MusicBeePlugin
                 Label lblColorHighlight = new Label
                 {
                     AutoSize = true,
-                    Location = new Point(0, 26),
+                    Location = new Point(0, 28),
                     Text = "Highlight Color:"
                 };
                 ComboBox comboColorHighlight = new ComboBox
@@ -111,7 +113,7 @@ namespace MusicBeePlugin
                 Label lblColorBackground = new Label
                 {
                     AutoSize = true,
-                    Location = new Point(comboColorHighlight.Location.X + comboColorHighlight.Width + 8, 26),
+                    Location = new Point(comboColorHighlight.Location.X + comboColorHighlight.Width + 8, 28),
                     Text = "Background Color:"
                 };
                 ComboBox comboColorBackground = new ComboBox
@@ -151,7 +153,8 @@ namespace MusicBeePlugin
         // MusicBee is closing the plugin (plugin is being disabled by user or MusicBee is shutting down)
         public void Close(PluginCloseReason reason)
         {
-            _timer.Close();
+            _manager.Close();
+            //_timer.Close();
             _mainForm?.Close();
         }
 
@@ -169,42 +172,53 @@ namespace MusicBeePlugin
             {
                 case NotificationType.PluginStartup:
                     // perform startup initialisation
-                    _timer = new Timer(100);
-                    _timer.Elapsed += _timer_Elapsed;
+                    _manager = new Manager(mbApiInterface);
+                    _track = GetTrack();
+                    _manager.UpdateTrack(_track);
+                    //_timer = new Timer(100);
+                    //_timer.Elapsed += _timer_Elapsed;
                     switch (mbApiInterface.Player_GetPlayState())
                     {
                         case PlayState.Playing:
-                            _timer.Start();
+                           // _timer.Start();
+                            _manager.StartTimer();
                             break;
                     }
                     //if (ChapterListMB.Properties.Settings.Default.StartWithMusicBee)
                     //    OnMenuClicked(null, null);
                     break;
                 case NotificationType.TrackChanged:
-                    if (_mainForm == null) return;
+                    if (_mainForm == null  && _mbPanel == null) return;
                     RepeatSection.Clear();
                     _currentChapter = null;
                     _track = GetTrack();
-                    _mainForm.Invoke(_mainForm.UpdateTrackDelegate, _track);
+                    _manager.UpdateTrack(_track);
+                    _mainForm?.Invoke(_mainForm.UpdateTrackDelegate, _track);
+
                     break;
                 case NotificationType.TrackChanging:
-                    if (!_timer.Enabled) _timer.Stop();
+                    //if (!_timer.Enabled) _timer.Stop();
+                    _manager.StopTimer();
                     break;
                 case NotificationType.PlayStateChanged:
-                    if (_track == null) return;
+                    //if (_track == null) return;
                     switch (mbApiInterface.Player_GetPlayState())
                     {
                         case PlayState.Playing:
-                            if (!_timer.Enabled) _timer.Start();
+                            //if (!_timer.Enabled) _timer.Start();
+                            _manager.StartTimer();
                             break;
                         case PlayState.Paused:
-                            if (_timer.Enabled) _timer.Stop();
+                            //if (_timer.Enabled) _timer.Stop();
+                            _manager.StopTimer();
                             break;
                         case PlayState.Stopped:
-                            if (_timer.Enabled) _timer.Stop();
+                            //if (_timer.Enabled) _timer.Stop();
+                            _manager.StopTimer();
                             break;
                         case PlayState.Undefined:
-                            if (_timer.Enabled) _timer.Stop();
+                            //if (_timer.Enabled) _timer.Stop();
+                            _manager.StopTimer();
                             break;
                     }
                     break;
@@ -218,7 +232,7 @@ namespace MusicBeePlugin
             Chapter currentChapter = _track.ChapterList.GetCurrentChapterFromPosition(playerPosition);
             if (!currentChapter.Equals(_currentChapter))
             {
-                _mainForm.Invoke(_mainForm.SetCurrentChapterDelegate, currentChapter);
+                _mainForm?.Invoke(_mainForm.SetCurrentChapterDelegate, currentChapter);
                 _currentChapter = currentChapter;
             }
             // Repeat section
@@ -264,7 +278,7 @@ namespace MusicBeePlugin
                 {
                     _currentChapter = _track.ChapterList[0];
                     _mainForm.Invoke(_mainForm.SetCurrentChapterDelegate, _currentChapter);
-                    _timer.Start();
+                    //_timer.Start();
                 }
             }
         }
@@ -283,108 +297,13 @@ namespace MusicBeePlugin
             //    = 0 indicates to MusicBee this control resizeable
             //    > 0 indicates to MusicBee the fixed height for the control.Note it is recommended you scale the height for high DPI screens(create a graphics object and get the DpiY value)
 
-            
-
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle
-            {
-                BackColor = SystemColors.Control,
-            };
-            DataGridView chaptersDgv = new DataGridView
-            {
-                AllowUserToAddRows = false,
-                AllowUserToDeleteRows = false,
-                AllowUserToResizeColumns = false,
-                AllowUserToResizeRows = false,
-                AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1,
-                Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right,
-                BackgroundColor = SystemColors.Window,
-                BorderStyle = BorderStyle.Fixed3D,
-                CellBorderStyle = DataGridViewCellBorderStyle.None,
-                ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize,
-                Location = new Point(12, 12),
-                MinimumSize = new Size(200, 200),
-                MultiSelect = false,
-                Name = "chaptersDGV",
-                RowHeadersVisible = false,
-                RowHeadersWidth = 30,
-                RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing,
-                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                Size = new Size(panel.Width-16, panel.Height - 62),
-                TabIndex = 0,
-                //CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.OnChaptersDgvCellClick),
-                //CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.chaptersDGV_CellEndEdit),
-                //CellMouseDoubleClick += chaptersDGV_CellMouseDoubleClick,
-                // SelectionChanged += new System.EventHandler(this.OnChaptersDgvSelectionChanged),
-            };
-            DataGridViewImageColumn dgvChapterStatus = new DataGridViewImageColumn
-            {
-                HeaderText = "",
-                Name = "ChapterStatus",
-                ReadOnly = true,
-                Resizable = DataGridViewTriState.False,
-                Width = 30,
-            };
-            DataGridViewTextBoxColumn dgvPositionCol = new DataGridViewTextBoxColumn
-            {
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader,
-                DataPropertyName = "TimeCode",
-                HeaderText = "Position",
-                Name = "positionCol",
-                ReadOnly = true,
-                SortMode = DataGridViewColumnSortMode.NotSortable,
-                Width = 50
-            };
-            DataGridViewTextBoxColumn dgvTitleCol = new DataGridViewTextBoxColumn
-            {
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
-                DataPropertyName = "Title",
-                HeaderText = "Chapter Title",
-                Name = "titleCol",
-                SortMode = DataGridViewColumnSortMode.NotSortable
-            };
-            chaptersDgv.Columns.AddRange(dgvChapterStatus, dgvPositionCol, dgvTitleCol);
-            chaptersDgv.DataSource = _chapterListBindingSource;
-
-
-            Button btnAddChapter = new Button
-            {
-                Text = "&Add",
-                Size = new Size(40, 35),
-                Location = new Point(8, panel.Height - 35 - 8),
-                Anchor = AnchorStyles.Left | AnchorStyles.Bottom,
-                TabIndex = 1
-            };
-            Button btnRemoveChapter = new Button
-            {
-                Text = "&Remove",
-                Size = new Size(60, 35),
-                Location = new Point(56, panel.Height - 35 - 8),
-                Anchor = AnchorStyles.Left | AnchorStyles.Bottom,
-                TabIndex = 2
-            };
-
-            ListBox lb = new ListBox
-            {
-                DataSource = new List<string>() {"test1", "test2", "test3"},
-                Location = new Point(0, 120)
-            };
-            MainUserControl muc = new MainUserControl
-            {
-                Dock = DockStyle.Fill,
-            };
-
-            panel.Invoke(new Action(() =>
-            {
-                //panel.Controls.Add(lbl);
-                panel.Controls.AddRange(new Control[] { btnAddChapter, btnRemoveChapter, chaptersDgv});
-                //panel.Controls.Add(muc);
-            }));
-
-            float dpiScaling = 0;
-            using (Graphics g = panel.CreateGraphics())
-            {
-                dpiScaling = g.DpiY / 96f;
-            }
+            _mbPanel = new PanelManager(panel, _manager);
+            _manager.UpdateTrack(_track);
+            //float dpiScaling = 0;
+            //using (Graphics g = panel.CreateGraphics())
+            //{
+            //    dpiScaling = g.DpiY / 96f;
+            //}
             //panel.Paint += panel_Paint;
             //return Convert.ToInt32(100 * dpiScaling);
             return 0;
@@ -445,13 +364,13 @@ namespace MusicBeePlugin
         {
             var currentPosition = mbApiInterface.Player_GetPosition();
             _track.ChapterList.CreateNewChapter(newChapterName, currentPosition);
-            if (!_timer.Enabled)
-                _timer.Enabled = true;
+            //if (!_timer.Enabled)
+            //    _timer.Enabled = true;
         }
         private void MainFormOnRemoveChapterButtonClickedRouted(object sender, Chapter e)
         {
             _track.ChapterList.RemoveChapter(e);
-            _mainForm.Invoke(_mainForm.UpdateTrackDelegate, _track);
+            _mainForm?.Invoke(_mainForm.UpdateTrackDelegate, _track);
         }
         private void MainFormOnChangeChapterRequested(object sender, ChapterChangeEventArgs e)
         {

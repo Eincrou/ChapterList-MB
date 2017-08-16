@@ -36,14 +36,14 @@
             this.shiftPositionBackButton = new System.Windows.Forms.Button();
             this.shiftPositionFwdButton = new System.Windows.Forms.Button();
             this.chaptersDGV = new System.Windows.Forms.DataGridView();
-            this.ChapterStatus = new System.Windows.Forms.DataGridViewImageColumn();
-            this.positionCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.titleCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.titleArtistStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.chaptersCountStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.comboBoxNewChapterName = new System.Windows.Forms.ComboBox();
+            this.ChapterStatus = new System.Windows.Forms.DataGridViewImageColumn();
+            this.positionCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.titleCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.chaptersDGV)).BeginInit();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -80,7 +80,7 @@
             this.shiftPositionBackButton.Size = new System.Drawing.Size(40, 35);
             this.shiftPositionBackButton.TabIndex = 5;
             this.shiftPositionBackButton.Text = "<<";
-            this.toolTip1.SetToolTip(this.shiftPositionBackButton, "Nudges the position of the selected chapter. backwards.,");
+            this.toolTip1.SetToolTip(this.shiftPositionBackButton, "Nudges the position of the selected chapter backwards.");
             this.shiftPositionBackButton.UseVisualStyleBackColor = true;
             this.shiftPositionBackButton.Click += new System.EventHandler(this.shiftPositionBackButton_Click);
             // 
@@ -92,7 +92,7 @@
             this.shiftPositionFwdButton.Size = new System.Drawing.Size(40, 35);
             this.shiftPositionFwdButton.TabIndex = 6;
             this.shiftPositionFwdButton.Text = ">>";
-            this.toolTip1.SetToolTip(this.shiftPositionFwdButton, "Nudges the position of the selected chapter. forwards,");
+            this.toolTip1.SetToolTip(this.shiftPositionFwdButton, "Nudges the position of the selected chapter forwards.");
             this.shiftPositionFwdButton.UseVisualStyleBackColor = true;
             this.shiftPositionFwdButton.Click += new System.EventHandler(this.shiftPositionFwdButton_Click);
             // 
@@ -129,32 +129,6 @@
             this.chaptersDGV.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.chaptersDGV_CellEndEdit);
             this.chaptersDGV.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.chaptersDGV_CellMouseDoubleClick);
             this.chaptersDGV.SelectionChanged += new System.EventHandler(this.OnChaptersDgvSelectionChanged);
-            // 
-            // ChapterStatus
-            // 
-            this.ChapterStatus.HeaderText = "";
-            this.ChapterStatus.Name = "ChapterStatus";
-            this.ChapterStatus.ReadOnly = true;
-            this.ChapterStatus.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.ChapterStatus.Width = 30;
-            // 
-            // positionCol
-            // 
-            this.positionCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.positionCol.DataPropertyName = "TimeCode";
-            this.positionCol.HeaderText = "Position";
-            this.positionCol.Name = "positionCol";
-            this.positionCol.ReadOnly = true;
-            this.positionCol.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.positionCol.Width = 50;
-            // 
-            // titleCol
-            // 
-            this.titleCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.titleCol.DataPropertyName = "Title";
-            this.titleCol.HeaderText = "Chapter Title";
-            this.titleCol.Name = "titleCol";
-            this.titleCol.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // statusStrip1
             // 
@@ -200,6 +174,32 @@
             this.comboBoxNewChapterName.Name = "comboBoxNewChapterName";
             this.comboBoxNewChapterName.Size = new System.Drawing.Size(85, 21);
             this.comboBoxNewChapterName.TabIndex = 9;
+            // 
+            // ChapterStatus
+            // 
+            this.ChapterStatus.HeaderText = "";
+            this.ChapterStatus.Name = "ChapterStatus";
+            this.ChapterStatus.ReadOnly = true;
+            this.ChapterStatus.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.ChapterStatus.Width = 20;
+            // 
+            // positionCol
+            // 
+            this.positionCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.positionCol.DataPropertyName = "TimeCode";
+            this.positionCol.HeaderText = "Position";
+            this.positionCol.Name = "positionCol";
+            this.positionCol.ReadOnly = true;
+            this.positionCol.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.positionCol.Width = 50;
+            // 
+            // titleCol
+            // 
+            this.titleCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.titleCol.DataPropertyName = "Title";
+            this.titleCol.HeaderText = "Chapter Title";
+            this.titleCol.Name = "titleCol";
+            this.titleCol.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // MainForm
             // 
