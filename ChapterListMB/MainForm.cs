@@ -57,7 +57,7 @@ namespace ChapterListMB
             ClearFirstColumn();
 
            titleArtistStatusLabel.Text = $"{Track.NowPlayingTrackInfo.Artist} – {Track.NowPlayingTrackInfo.Title}";
-            if (Track.ChapterList.NumChapters == 0)
+            if (Track.ChapterList.Count == 0)
             {
                 chaptersCountStatusLabel.Text = "No Chapters";
             }
@@ -103,7 +103,7 @@ namespace ChapterListMB
         public void SetCurrentChapterMethod(Chapter chapter)
         {
             CurrentChapter = chapter;
-            chaptersCountStatusLabel.Text = $"{CurrentChapter.ChapterNumber}/{Track.ChapterList.NumChapters} – {CurrentChapter.Title}";
+            chaptersCountStatusLabel.Text = $"{CurrentChapter.ChapterNumber}/{Track.ChapterList.Count} – {CurrentChapter.Title}";
 
             SetRowColors();
             UpdateFirstColumn();
@@ -145,7 +145,7 @@ namespace ChapterListMB
 
         private void SetButtonsEnabledState()
         {
-            if (Track.ChapterList.NumChapters == 0 || chaptersDGV.SelectedRows[0].Index == 0)
+            if (Track.ChapterList.Count == 0 || chaptersDGV.SelectedRows[0].Index == 0)
             {
                 removeChapterButton.Enabled = false;
                 shiftPositionBackButton.Enabled = false;
@@ -227,7 +227,7 @@ namespace ChapterListMB
         }
         private void chaptersDGV_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {   // Requests to set player position to chapter position.
-            if (e.RowIndex >= 0 && e.RowIndex < Track.ChapterList.NumChapters)
+            if (e.RowIndex >= 0 && e.RowIndex < Track.ChapterList.Count)
             {
                 Chapter chapt = ((ChapterList) _chapterListBindingSource.DataSource)[e.RowIndex];
                 OnSelectedItemDoubleClickedRouted(chapt);

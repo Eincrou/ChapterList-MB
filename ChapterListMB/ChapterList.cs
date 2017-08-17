@@ -10,11 +10,6 @@ namespace ChapterListMB
 {
     public class ChapterList : Collection<Chapter>
     {
-        /// <summary>
-        /// Gets the total number of chapters in this ChapterList.
-        /// </summary>
-        public int NumChapters => Items.Count;
-
         public ChapterList()
         {
             XmlOperations.ReadChapterListFromXml(this);

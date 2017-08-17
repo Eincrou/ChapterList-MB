@@ -84,6 +84,7 @@ namespace ChapterListMB
                 Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right,
                 BorderStyle = BorderStyle.None,
                 CellBorderStyle = DataGridViewCellBorderStyle.None,
+                ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single,
                 ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize,
                 DataSource = _chapterListBindingSource,
                 Location = new Point(12, 12),
@@ -96,6 +97,7 @@ namespace ChapterListMB
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect,
                 Size = new Size(_panel.Width - 16, _panel.Height - 62),
                 TabIndex = 0,
+                
                 //CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.chaptersDGV_CellEndEdit),
                 };
             chaptersDgv.BackgroundColor = _manager.GetElementColor(Plugin.SkinElement.SkinTrackAndArtistPanel,
@@ -134,8 +136,6 @@ namespace ChapterListMB
             chaptersDgv.SelectionChanged += ChaptersDgvOnSelectionChanged;
             chaptersDgv.CellEndEdit += ChaptersDgvOnCellEndEdit;
         }
-
-
 
         private void SetUpButtons()
         {
@@ -181,7 +181,6 @@ namespace ChapterListMB
             toolTip1.SetToolTip(btnShiftBackwards, Resources.TooltipShiftBackward);
         }
         
-
         private void SetUpOther()
         {
             comboChapterTitles = new ComboBox
@@ -209,7 +208,13 @@ namespace ChapterListMB
                 _panel.ResumeLayout();
             }));
         }
-
+        public void ClearFirstColumn()
+        {   // Blanks out first current chapter column
+            for (int i = 0; i < chaptersDgv.RowCount; i++)
+            {
+                chaptersDgv.Rows[i].Cells[0].Value = new Bitmap(16, 16);
+            }
+        }
         private void UpdateFirstColumn()
         {
             _panel.Invoke(new Action(() =>
@@ -262,6 +267,7 @@ namespace ChapterListMB
 
         private void SetDgvHighlightColors()
         {
+            if (chaptersDgv.Rows.Count != _manager.Track.ChapterList.Count) return;
             foreach (DataGridViewRow row in chaptersDgv.Rows)
             {
                 row.DefaultCellStyle = (row.Index % 2) == 0 ? dataGridViewCellStyle1 : dataGridViewCellStyle2; ;
@@ -272,14 +278,14 @@ namespace ChapterListMB
                 BackColor = Settings.Default.HighlightColor,
                 SelectionBackColor = Settings.Default.HighlightBackgroundColor,
             };
-            chaptersDgv.Rows[CurrentChapterIndex].DefaultCellStyle = selectedStyle;
+            chaptersDgv.Rows[_manager.CurrentChapter.ChapterNumber - 1].DefaultCellStyle = selectedStyle;
 
             DataGridViewCellStyle boldStyle = new DataGridViewCellStyle(selectedStyle)
             {
-                Font = new Font(FontFamily.GenericSansSerif, 8.25f, FontStyle.Bold)
+                Font = new Font(Control.DefaultFont, FontStyle.Bold)
             }; // Bold the current chapter title text
             
-            chaptersDgv.Rows[CurrentChapterIndex].Cells[2].Style = boldStyle;
+            chaptersDgv.Rows[_manager.CurrentChapter.ChapterNumber - 1].Cells[2].Style = boldStyle;
         }
         private void SetReplayImage(string repeatType, DataGridViewRow row)
         {
@@ -297,7 +303,7 @@ namespace ChapterListMB
         }
         private void SetButtonsEnabledState()
         {
-            if (_manager.Track.ChapterList.NumChapters == 0 || chaptersDgv.SelectedRows[0].Index == 0)
+            if (_manager.Track.ChapterList.Count == 0 || chaptersDgv.SelectedRows[0].Index == 0)
             {
                 btnRemoveChapter.Enabled = false;
                 btnShiftBackwards.Enabled = false;
@@ -317,15 +323,17 @@ namespace ChapterListMB
             {
                 _chapterListBindingSource.DataSource = null;
                 _chapterListBindingSource.DataSource = track.ChapterList;
-                
+
                 SetButtonsEnabledState();
             }));
+            ClearFirstColumn();
+            if (track.ChapterList.Count == 0) return;
             SetDgvHighlightColors();
             UpdateFirstColumn();
         }
         private void ManagerOnCurrentChapterChanged(object sender, Chapter chapter)
         {
-            CurrentChapterIndex = chapter.ChapterNumber - 1;
+            if (chapter == null) return;
             SetDgvHighlightColors();
             UpdateFirstColumn();
         }

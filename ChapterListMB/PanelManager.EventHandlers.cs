@@ -49,6 +49,7 @@ namespace ChapterListMB
 
         private void BtnAddChapterOnClick(object sender, EventArgs eventArgs)
         {
+            if (string.IsNullOrEmpty(comboChapterTitles.Text)) return;
             _manager.AddChapter(comboChapterTitles.Text);
             _chapterListBindingSource.ResetBindings(false);
         }

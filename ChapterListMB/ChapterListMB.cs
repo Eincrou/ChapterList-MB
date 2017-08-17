@@ -78,7 +78,7 @@ namespace MusicBeePlugin
                 };
                 NumericUpDown nudShiftAmount = new NumericUpDown()
                 {
-                    Location = new Point(lblShiftAmount.Location.X + lblShiftAmount.Width + 110, 0),
+                    Location = new Point(lblShiftAmount.Location.X + lblShiftAmount.Width + 150, 0),
                     Width = 50,
                     Text = "Chapter position shift amount (in milliseconds)",
                     Maximum = 10000,
@@ -194,7 +194,8 @@ namespace MusicBeePlugin
                     _track = GetTrack();
                     _manager.UpdateTrack(_track);
                     _mainForm?.Invoke(_mainForm.UpdateTrackDelegate, _track);
-
+                    if (mbApiInterface.Player_GetPlayState() == PlayState.Playing)
+                        _manager.StartTimer();
                     break;
                 case NotificationType.TrackChanging:
                     //if (!_timer.Enabled) _timer.Stop();
@@ -227,7 +228,7 @@ namespace MusicBeePlugin
 
         private void _timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            if (_track.ChapterList.NumChapters == 0) return;
+            if (_track.ChapterList.Count == 0) return;
             int playerPosition = mbApiInterface.Player_GetPosition();
             Chapter currentChapter = _track.ChapterList.GetCurrentChapterFromPosition(playerPosition);
             if (!currentChapter.Equals(_currentChapter))
@@ -273,7 +274,7 @@ namespace MusicBeePlugin
             {
                 _track = GetTrack();
                 _mainForm.Invoke(_mainForm.UpdateTrackDelegate, _track);
-                if (_track.ChapterList.NumChapters == 0) return;
+                if (_track.ChapterList.Count == 0) return;
                 if (mbApiInterface.Player_GetPlayState() == PlayState.Playing)
                 {
                     _currentChapter = _track.ChapterList[0];
@@ -330,7 +331,7 @@ namespace MusicBeePlugin
 
         private void chaptersDGV_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {   // Requests to set player position to chapter position.
-            if (e.RowIndex >= 0 && e.RowIndex < _track.ChapterList.NumChapters)
+            if (e.RowIndex >= 0 && e.RowIndex < _track.ChapterList.Count)
             {
                 Chapter chapt = ((ChapterList)_chapterListBindingSource.DataSource)[e.RowIndex];
                 OnSelectedItemDoubleClickedRouted(chapt);
